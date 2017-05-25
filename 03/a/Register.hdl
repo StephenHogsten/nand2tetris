@@ -1,0 +1,84 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/03/a/Register.hdl
+
+/**
+ * 16-bit register:
+ * If load[t] == 1 then out[t+1] = in[t]
+ * else out does not change
+ */
+
+CHIP Register {
+    IN in[16], load;
+    OUT out[16];
+
+    PARTS:
+    Mux(a=dffout0, b=in[0], sel=load, out=dffin0);
+    Mux(a=dffout1, b=in[1], sel=load, out=dffin1);
+    Mux(a=dffout2, b=in[2], sel=load, out=dffin2);
+    Mux(a=dffout3, b=in[3], sel=load, out=dffin3);
+    Mux(a=dffout4, b=in[4], sel=load, out=dffin4);
+    Mux(a=dffout5, b=in[5], sel=load, out=dffin5);
+    Mux(a=dffout6, b=in[6], sel=load, out=dffin6);
+    Mux(a=dffout7, b=in[7], sel=load, out=dffin7);
+    Mux(a=dffout8, b=in[8], sel=load, out=dffin8);
+    Mux(a=dffout9, b=in[9], sel=load, out=dffin9);
+    Mux(a=dffout10, b=in[10], sel=load, out=dffin10);
+    Mux(a=dffout11, b=in[11], sel=load, out=dffin11);
+    Mux(a=dffout12, b=in[12], sel=load, out=dffin12);
+    Mux(a=dffout13, b=in[13], sel=load, out=dffin13);
+    Mux(a=dffout14, b=in[14], sel=load, out=dffin14);
+    Mux(a=dffout15, b=in[15], sel=load, out=dffin15);
+
+    DFF(in=dffin0, out=dffout0);
+    DFF(in=dffin1, out=dffout1);
+    DFF(in=dffin2, out=dffout2);
+    DFF(in=dffin3, out=dffout3);
+    DFF(in=dffin4, out=dffout4);
+    DFF(in=dffin5, out=dffout5);
+    DFF(in=dffin6, out=dffout6);
+    DFF(in=dffin7, out=dffout7);
+    DFF(in=dffin8, out=dffout8);
+    DFF(in=dffin9, out=dffout9);
+    DFF(in=dffin10, out=dffout10);
+    DFF(in=dffin11, out=dffout11);
+    DFF(in=dffin12, out=dffout12);
+    DFF(in=dffin13, out=dffout13);
+    DFF(in=dffin14, out=dffout14);
+    DFF(in=dffin15, out=dffout15);
+
+    Not(in=dffout0, out=notout0);
+    Not(in=dffout1, out=notout1);
+    Not(in=dffout2, out=notout2);
+    Not(in=dffout3, out=notout3);
+    Not(in=dffout4, out=notout4);
+    Not(in=dffout5, out=notout5);
+    Not(in=dffout6, out=notout6);
+    Not(in=dffout7, out=notout7);
+    Not(in=dffout8, out=notout8);
+    Not(in=dffout9, out=notout9);
+    Not(in=dffout10, out=notout10);
+    Not(in=dffout11, out=notout11);
+    Not(in=dffout12, out=notout12);
+    Not(in=dffout13, out=notout13);
+    Not(in=dffout14, out=notout14);
+    Not(in=dffout15, out=notout15);
+
+    Not(in=notout0, out=out[0]);
+    Not(in=notout1, out=out[1]);
+    Not(in=notout2, out=out[2]);
+    Not(in=notout3, out=out[3]);
+    Not(in=notout4, out=out[4]);
+    Not(in=notout5, out=out[5]);
+    Not(in=notout6, out=out[6]);
+    Not(in=notout7, out=out[7]);
+    Not(in=notout8, out=out[8]);
+    Not(in=notout9, out=out[9]);
+    Not(in=notout10, out=out[10]);
+    Not(in=notout11, out=out[11]);
+    Not(in=notout12, out=out[12]);
+    Not(in=notout13, out=out[13]);
+    Not(in=notout14, out=out[14]);
+    Not(in=notout15, out=out[15]);
+}

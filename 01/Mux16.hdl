@@ -1,0 +1,66 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/Mux16.hdl
+
+/**
+ * 16-bit multiplexor: 
+ * for i = 0..15 out[i] = a[i] if sel == 0 
+ *                        b[i] if sel == 1
+ */
+
+CHIP Mux16 {
+    IN a[16], b[16], sel;
+    OUT out[16];
+
+    PARTS:
+    Nand(a=sel, b=sel, out=ss);
+	Nand(a=sel, b=b[0], out=bs0);
+	Nand(a=a[0], b=ss, out=as0);
+	Nand(a=as0, b=bs0, out=out[0]);
+	Nand(a=sel, b=b[1], out=bs1);
+	Nand(a=a[1], b=ss, out=as1);
+	Nand(a=as1, b=bs1, out=out[1]);
+	Nand(a=sel, b=b[2], out=bs2);
+	Nand(a=a[2], b=ss, out=as2);
+	Nand(a=as2, b=bs2, out=out[2]);
+	Nand(a=sel, b=b[3], out=bs3);
+	Nand(a=a[3], b=ss, out=as3);
+	Nand(a=as3, b=bs3, out=out[3]);
+	Nand(a=sel, b=b[4], out=bs4);
+	Nand(a=a[4], b=ss, out=as4);
+	Nand(a=as4, b=bs4, out=out[4]);
+	Nand(a=sel, b=b[5], out=bs5);
+	Nand(a=a[5], b=ss, out=as5);
+	Nand(a=as5, b=bs5, out=out[5]);
+	Nand(a=sel, b=b[6], out=bs6);
+	Nand(a=a[6], b=ss, out=as6);
+	Nand(a=as6, b=bs6, out=out[6]);
+	Nand(a=sel, b=b[7], out=bs7);
+	Nand(a=a[7], b=ss, out=as7);
+	Nand(a=as7, b=bs7, out=out[7]);
+	Nand(a=sel, b=b[8], out=bs8);
+	Nand(a=a[8], b=ss, out=as8);
+	Nand(a=as8, b=bs8, out=out[8]);
+	Nand(a=sel, b=b[9], out=bs9);
+	Nand(a=a[9], b=ss, out=as9);
+	Nand(a=as9, b=bs9, out=out[9]);
+	Nand(a=sel, b=b[10], out=bs10);
+	Nand(a=a[10], b=ss, out=as10);
+	Nand(a=as10, b=bs10, out=out[10]);
+	Nand(a=sel, b=b[11], out=bs11);
+	Nand(a=a[11], b=ss, out=as11);
+	Nand(a=as11, b=bs11, out=out[11]);
+	Nand(a=sel, b=b[12], out=bs12);
+	Nand(a=a[12], b=ss, out=as12);
+	Nand(a=as12, b=bs12, out=out[12]);
+	Nand(a=sel, b=b[13], out=bs13);
+	Nand(a=a[13], b=ss, out=as13);
+	Nand(a=as13, b=bs13, out=out[13]);
+	Nand(a=sel, b=b[14], out=bs14);
+	Nand(a=a[14], b=ss, out=as14);
+	Nand(a=as14, b=bs14, out=out[14]);
+	Nand(a=sel, b=b[15], out=bs15);
+	Nand(a=a[15], b=ss, out=as15);
+	Nand(a=as15, b=bs15, out=out[15]);
+}

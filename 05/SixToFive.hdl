@@ -1,0 +1,20 @@
+CHIP SixToFive {
+  IN notin[16];
+  OUT out[15];
+  PARTS:
+    Not(in=notin[0], out=out[0]);
+    Not(in=notin[1], out=out[1]);
+    Not(in=notin[2], out=out[2]);
+    Not(in=notin[3], out=out[3]);
+    Not(in=notin[4], out=out[4]);
+    Not(in=notin[5], out=out[5]);
+    Not(in=notin[6], out=out[6]);
+    Not(in=notin[7], out=out[7]);
+    Not(in=notin[8], out=out[8]);
+    Not(in=notin[9], out=out[9]);
+    Not(in=notin[10], out=out[10]);
+    Not(in=notin[11], out=out[11]);
+    Not(in=notin[12], out=out[12]);
+    Not(in=notin[13], out=out[13]);
+    Not(in=notin[14], out=out[14]);
+}

@@ -1,0 +1,70 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/DMux8Way.hdl
+
+/**
+ * 8-way demultiplexor:
+ * {a, b, c, d, e, f, g, h} = {in, 0, 0, 0, 0, 0, 0, 0} if sel == 000
+ *                            {0, in, 0, 0, 0, 0, 0, 0} if sel == 001
+ *                            etc.
+ *                            {0, 0, 0, 0, 0, 0, 0, in} if sel == 111
+ */
+
+CHIP DMux8Way {
+    IN in, sel[3];
+    OUT a, b, c, d, e, f, g, h;
+
+    PARTS:
+    Nand(a=sel[0], b=sel[0], out=not0);
+	Nand(a=sel[1], b=sel[1], out=not1);
+	Nand(a=sel[2], b=sel[2], out=not2);
+	
+	Nand(a=not1, b=not0, out=notfirst);
+	Nand(a=notfirst, b=notfirst, out=first);
+	Nand(a=first, b=not2, out=notsel0);
+	Nand(a=notsel0, b=notsel0, out=sel0);
+	Nand(a=sel0, b=in, out=outa);
+	Nand(a=outa, b=outa, out=a);
+	
+	Nand(a=not1, b=sel[0], out=notsecond);
+	Nand(a=notsecond, b=notsecond, out=second);
+	Nand(a=second, b=not2, out=notsel1);
+	Nand(a=notsel1, b=notsel1, out=sel1);
+	Nand(a=sel1, b=in, out=outb);
+	Nand(a=outb, b=outb, out=b);
+	
+	Nand(a=sel[1], b=not0, out=notthird);
+	Nand(a=notthird, b=notthird, out=third);
+	Nand(a=third, b=not2, out=notsel2);
+	Nand(a=notsel2, b=notsel2, out=sel2);
+	Nand(a=sel2, b=in, out=outc);
+	Nand(a=outc, b=outc, out=c);
+	
+	Nand(a=sel[1], b=sel[0], out=notfourth);
+	Nand(a=notfourth, b=notfourth, out=fourth);
+	Nand(a=fourth, b=not2, out=notsel3);
+	Nand(a=notsel3, b=notsel3, out=sel3);
+	Nand(a=sel3, b=in, out=outd);
+	Nand(a=outd, b=outd, out=d);
+	
+	Nand(a=first, b=sel[2], out=notsel4);
+	Nand(a=notsel4, b=notsel4, out=sel4);
+	Nand(a=sel4, b=in, out=oute);
+	Nand(a=oute, b=oute, out=e);
+	
+	Nand(a=second, b=sel[2], out=notsel5);
+	Nand(a=notsel5, b=notsel5, out=sel5);
+	Nand(a=sel5, b=in, out=outf);
+	Nand(a=outf, b=outf, out=f);
+	
+	Nand(a=third, b=sel[2], out=notsel6);
+	Nand(a=notsel6, b=notsel6, out=sel6);
+	Nand(a=sel6, b=in, out=outg);
+	Nand(a=outg, b=outg, out=g);
+	
+	Nand(a=fourth, b=sel[2], out=notsel7);
+	Nand(a=notsel7, b=notsel7, out=sel7);
+	Nand(a=sel7, b=in, out=outh);
+	Nand(a=outh, b=outh, out=h);
+}

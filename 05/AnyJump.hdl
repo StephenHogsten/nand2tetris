@@ -1,0 +1,40 @@
+CHIP AnyJump {
+  IN in[16], j1, j2, j3;
+  OUT anyJump;
+  PARTS:
+    And(a=j1, b=in[15], out=jumpj1);    // < 0 and j1 bit
+    Or8Way(out=or1,
+        in[0]=in[0],
+        in[1]=in[1],
+        in[2]=in[2],
+        in[3]=in[3],
+        in[4]=in[4],
+        in[5]=in[5],
+        in[6]=in[6],
+        in[7]=in[7]);
+    Or8Way(out=or2,
+        in[0]=in[8],
+        in[1]=in[9],
+        in[2]=in[10],
+        in[3]=in[11],
+        in[4]=in[12],
+        in[5]=in[13],
+        in[6]=in[14],
+        in[7]=in[15]);
+    Or(a=or1, b=or2, out=notequals0);
+    Not(in=notequals0, out=equals0);
+    And(a=j2, b=equals0, out=jumpj2);
+    Not(in=in[15], out=isPos);
+    Or8Way(out=or3,
+        in[0]=in[8],
+        in[1]=in[9],
+        in[2]=in[10],
+        in[3]=in[11],
+        in[4]=in[12],
+        in[5]=in[13],
+        in[6]=in[14]);
+    Or(a=or1, b=or3, out=something);
+    And(a=something, b=isPos, out=over0);
+    And(a=j3, b=over0, out=jumpj3);
+    Or8Way(in[0]=jumpj1, in[1]=jumpj2, in[2]=jumpj3, out=anyJump);
+}

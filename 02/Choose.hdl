@@ -1,0 +1,60 @@
+CHIP Choose {
+	IN
+		a[16],
+		b[16],
+		choosea;
+	OUT
+		out[16];
+	PARTS:
+		And(a=a[0], b=choosea, out=outa0);
+		And(a=a[1], b=choosea, out=outa1);
+		And(a=a[2], b=choosea, out=outa2);
+		And(a=a[3], b=choosea, out=outa3);
+		And(a=a[4], b=choosea, out=outa4);
+		And(a=a[5], b=choosea, out=outa5);
+		And(a=a[6], b=choosea, out=outa6);
+		And(a=a[7], b=choosea, out=outa7);
+		And(a=a[8], b=choosea, out=outa8);
+		And(a=a[9], b=choosea, out=outa9);
+		And(a=a[10], b=choosea, out=outa10);
+		And(a=a[11], b=choosea, out=outa11);
+		And(a=a[12], b=choosea, out=outa12);
+		And(a=a[13], b=choosea, out=outa13);
+		And(a=a[14], b=choosea, out=outa14);
+		And(a=a[15], b=choosea, out=outa15);
+
+		Not(in=choosea, out=chooseb);
+		And(a=b[0], b=chooseb, out=outb0);
+		And(a=b[1], b=chooseb, out=outb1);
+		And(a=b[2], b=chooseb, out=outb2);
+		And(a=b[3], b=chooseb, out=outb3);
+		And(a=b[4], b=chooseb, out=outb4);
+		And(a=b[5], b=chooseb, out=outb5);
+		And(a=b[6], b=chooseb, out=outb6);
+		And(a=b[7], b=chooseb, out=outb7);
+		And(a=b[8], b=chooseb, out=outb8);
+		And(a=b[9], b=chooseb, out=outb9);
+		And(a=b[10], b=chooseb, out=outb10);
+		And(a=b[11], b=chooseb, out=outb11);
+		And(a=b[12], b=chooseb, out=outb12);
+		And(a=b[13], b=chooseb, out=outb13);
+		And(a=b[14], b=chooseb, out=outb14);
+		And(a=b[15], b=chooseb, out=outb15);
+
+		Or(a=outa0, b=outb0, out=out[0]);
+		Or(a=outa1, b=outb1, out=out[1]);
+		Or(a=outa2, b=outb2, out=out[2]);
+		Or(a=outa3, b=outb3, out=out[3]);
+		Or(a=outa4, b=outb4, out=out[4]);
+		Or(a=outa5, b=outb5, out=out[5]);
+		Or(a=outa6, b=outb6, out=out[6]);
+		Or(a=outa7, b=outb7, out=out[7]);
+		Or(a=outa8, b=outb8, out=out[8]);
+		Or(a=outa9, b=outb9, out=out[9]);
+		Or(a=outa10, b=outb10, out=out[10]);
+		Or(a=outa11, b=outb11, out=out[11]);
+		Or(a=outa12, b=outb12, out=out[12]);
+		Or(a=outa13, b=outb13, out=out[13]);
+		Or(a=outa14, b=outb14, out=out[14]);
+		Or(a=outa15, b=outb15, out=out[15]);
+}
