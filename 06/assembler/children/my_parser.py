@@ -14,6 +14,10 @@ class Parser:
         self.idx = None
         self.command = None
 
+    def reset(self):
+        self.idx = None
+        self.command = None
+
     def has_more_commands(self):
         """return bool for whether there are more lines with commands"""
         if self.idx is None:
