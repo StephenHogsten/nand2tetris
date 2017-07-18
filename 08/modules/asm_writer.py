@@ -249,3 +249,47 @@ class Writer:
         self.line('@RET')
         self.line('A=M')
         self.line('0;JMP')
+
+    def call_push_bases(self, base_name):
+        self.line('@' + base_name)
+        self.line('D=M')
+        self.line('@SP')
+        self.line('M=M+1')
+        self.line('A=M-1')
+        self.line('M=D')
+
+    def write_call(self, function_name, arg_cnt):
+        """call a function - push the current frame to the stack and goto the instructions"""
+        self.line(' '.join(['//', function_name, arg_cnt]), True)
+        # push return address label
+        return_label = '$call_' + function_name + '_' + str(self.location)
+        self.line('@' + return_label)
+        self.line('D=A')
+        self.line('@SP')
+        self.line('M=M+1')
+        self.line('A=M-1')
+        self.line('M=D')
+        # push local
+        self.call_push_bases('LCL')
+        # push arg
+        self.call_push_bases('ARG')
+        # push this
+        self.call_push_bases('THIS')
+        # push that
+        self.call_push_bases('THAT')
+        # arg = sp-n-5: args are what was pushed before frame stuff
+        #   A is already set to SP
+        self.line('D=A')
+        self.line('@' + str(4 + int(arg_cnt)))
+        self.line('D=D-A')
+        self.line('@ARG')
+        self.line('M=D')
+        # LCL = SP
+        self.line('@SP')
+        self.line('D=M')
+        self.line('@LCL')
+        self.line('M=D')
+        #goto f
+        self.line('@' + function_name)
+        self.line('0;JMP')
+        self.line('(' + return_label + ')', True)

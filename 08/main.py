@@ -29,6 +29,8 @@ def one_vm_file(filename, asm):
             asm.write_function(vm.arg1(), vm.arg2())
         elif command_type == 'C_RETURN':
             asm.write_return()
+        elif command_type == 'C_CALL':
+            asm.write_call(vm.arg1(), vm.arg2())
         else:
             print('command', command_type, 'not implemented')
 
