@@ -12,6 +12,7 @@ from modules.assembler import assemble
 def one_vm_file(filename, asm):
     """parses one vm file into a given asm file"""
     vm = Parser(filename)
+    asm.set_vm_file(filename)
     while vm.has_more_commands():
         vm.advance(False)
         command_type = vm.command_type()
@@ -47,6 +48,8 @@ def vm_directory(directory):
         directory = None
         prefix = ''
         asm.set_filename(os.path.split(os.getcwd())[1])
+
+    asm.write_bootstrap()
     for f in os.listdir(directory):
         if f[len(f) - 3:] == '.vm':
             one_vm_file(prefix + f, asm)

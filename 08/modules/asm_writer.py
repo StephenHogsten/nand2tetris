@@ -15,13 +15,16 @@ class Writer:
         """initialize"""
         self.file = None
         self.location = 0
-        self.function_arr = ['no_function']
-        self.function_dict = {'no_function': 0}
-        self.current_function = self.function_arr[0]
+        self.current_vm_file = ''
+        self.current_function = 'Sys.init'
 
     def name(self):
         """print filename"""
         return self.file.name
+
+    def set_vm_file(self, vm_filename):
+        """set the current VM filename (for statics naming)"""
+        self.current_vm_file = vm_filename.split('/').pop()
 
     def line(self, command, skip_increment=False):
         """shortcut for appending a new line of text"""
@@ -128,7 +131,7 @@ class Writer:
             elif segment == 'pointer':
                 asm_segment = '@' + str(int(index) + 3)
             else:
-                asm_segment = '@' + str(int(index) + 16)
+                asm_segment = '@' + self.current_vm_file + '.' + index
             if command == 'C_PUSH':
                 self.line(asm_segment)
                 self.line('D=M')
@@ -192,8 +195,6 @@ class Writer:
         """declare a function"""
         self.line(' '.join(['//', 'function', function_name, local_cnt]), True)
         self.line('(' + function_name + ')', True)        # does this need to be prefixed?
-        self.function_arr.append(function_name)       # save our function to array "stack"
-        self.function_dict[function_name] = local_cnt   # save how many locals (for return statements)
         self.current_function = function_name
         for i in range(int(local_cnt)):
             # pushing onto the stack for each local variable?
@@ -213,8 +214,7 @@ class Writer:
         # write line for debugging
         self.line('// return', True)
         # reset the current function (for scoping labels)
-        ending_function = self.function_arr.pop()
-        self.current_function = self.function_arr[len(self.function_arr) - 1]
+        # self.current_function = 'Sys.init'
         
         # book pseudo - code to asm translation
         # frame = lcl: lcl is the end of the new frame, store this somewhere
@@ -262,7 +262,8 @@ class Writer:
         """call a function - push the current frame to the stack and goto the instructions"""
         self.line(' '.join(['//', function_name, arg_cnt]), True)
         # push return address label
-        return_label = '$call_' + function_name + '_' + str(self.location)
+        return_label = '$call_' + str(self.location)
+        # return_label = str(self.location)
         self.line('@' + return_label)
         self.line('D=A')
         self.line('@SP')
@@ -293,3 +294,13 @@ class Writer:
         self.line('@' + function_name)
         self.line('0;JMP')
         self.line('(' + return_label + ')', True)
+
+    def write_bootstrap(self):
+        """write bootstrap code to initialize stack and call Sys.init"""
+        # SP=256
+        self.line('@256')
+        self.line('D=A')
+        self.line('@SP')
+        self.line('M=D')
+        #call Sys.init
+        self.write_call('Sys.init', '0')
