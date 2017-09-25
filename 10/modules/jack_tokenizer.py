@@ -43,7 +43,7 @@ class JackTokenizer:
             token = self.current_token
         if token in ('class', 'constructor', 'function', 'method', 'field', 'static', 'var', 'int', 'char', 'boolean', 'void', 'true', 'false', 'null', 'this', 'let', 'do', 'if', 'else', 'while', 'return'):
             return 'KEYWORD'
-        elif len(token) == 1 and token in '{}()[].,;+-*/^|<>=-':
+        elif len(token) == 1 and token in '{}()[].,;+-*/^|<>=~&':
             return 'SYMBOL'
         elif re.fullmatch('[0-9]{1,5}', token) and int(token) < 32768:
             return 'INT_CONST'
@@ -52,6 +52,7 @@ class JackTokenizer:
         elif re.fullmatch('"[^"^\n]+"', token):
             return 'STRING_CONST'
         else:
+            print('invalid token: ', token)
             return 'invalid string'
 
     # For all these routines I'm fine with just assuming it's good since we'll always call token_type first

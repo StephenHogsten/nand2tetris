@@ -61,10 +61,9 @@ class CompilationEngine:
             self.indent_level -= 1
             line = '  ' * self.indent_level
         if body != '' and include_close:
-            if body == '<':
-                body = '&lt;'
-            elif body == '>':
-                body = '&gt;'
+            translator = {'<': '&lt;', '>': '&gt;', '&': '&amp;'}
+            if body in translator:
+                body = translator[body]
             line += ' ' + body + ' '
         if include_close:
             line += '</' + element + '>'
