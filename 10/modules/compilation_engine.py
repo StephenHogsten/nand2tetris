@@ -61,6 +61,10 @@ class CompilationEngine:
             self.indent_level -= 1
             line = '  ' * self.indent_level
         if body != '' and include_close:
+            if body == '<':
+                body = '&lt;'
+            elif body == '>':
+                body = '&gt;'
             line += ' ' + body + ' '
         if include_close:
             line += '</' + element + '>'
@@ -646,10 +650,11 @@ class CompilationEngine:
         self.output_line('term', include_close=False)
 
         # constants don't simply translate with .lower()
-        if token == 'INT_CONST':
+        if token_type == 'INT_CONST':
             self.output_line('integerConstant', token)
-        elif token == 'STRING_CONST':
-            self.output_line('stringConstant', token)
+        elif token_type == 'STRING_CONST':
+            token_string = token[1: len(token) - 1]     # don't include the "
+            self.output_line('stringConstant', token_string)
         else:
             self.output_line(token_type.lower(), token)
 
@@ -686,7 +691,7 @@ class CompilationEngine:
                         return False
                     self.output_line(token_type.lower(), token)
                 elif token == '.': 
-                    # -class .- subroutine ( expression )
+                    # -class .- subroutine ( expressionList )
                     # I feel it's easier (though really it's worse) to just not use the subroutine call fn
                     # subroutine
                     [token_type, token, error] = self.check_current_token(['IDENTIFIER'])
@@ -700,8 +705,8 @@ class CompilationEngine:
                         return False
                     self.output_line(token_type.lower(), token)
 
-                    # expression
-                    if not self.compile_expression():
+                    # expressionList
+                    if not self.compile_expression_list():
                         return False
                         
                     # )

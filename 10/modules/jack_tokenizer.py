@@ -50,7 +50,7 @@ class JackTokenizer:
         elif re.fullmatch('[0-9A-Za-z_][A-Za-z_]*', token):
             return 'IDENTIFIER'
         elif re.fullmatch('"[^"^\n]+"', token):
-            return 'STRING_CONSTANT'
+            return 'STRING_CONST'
         else:
             return 'invalid string'
 
