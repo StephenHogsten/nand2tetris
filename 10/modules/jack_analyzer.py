@@ -11,10 +11,11 @@ def analyze(source):
     oneFile(source)
   else:
     # directory with many files
-    print('this is a directory, not a file')
+    print(source, ': this is a directory, not a file')
     for f in os.listdir(source):
+      print(f)
       if f[len(f) - 5:].upper() == '.JACK':
-        oneFile(f)
+        oneFile(os.path.join(source, f))
 
 def oneFile(filename):
   file_base = filename[:len(filename) - 5]
