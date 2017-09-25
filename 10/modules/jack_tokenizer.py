@@ -10,8 +10,7 @@ class JackTokenizer:
         f.close()
 
         # build array of tokens and eliminate bracketed comments
-        #   ! or " or & or b/w ( and ? (exclude @) or 
-        valid_token = re.compile('\/\*|\*\/|\/\/|[!&(-/:-?\[\]{-~]|[0-9]+|[a-z]+|[0-9A-Za-z_][A-Za-z_]*|"[^"^\n]+"')
+        valid_token = re.compile('\/\*|\*\/|\/\/|[!&(-/:-?\[\]{-~]|[0-9]+|[0-9A-Za-z_][A-Za-z_]*|[a-z]+|"[^"^\n]+"')
         dirty_tokens = ' '.join([line for line in lines if line != ''])  # dirty because it has comments
         dirty_tokens = valid_token.findall(dirty_tokens)
         in_comment = False
