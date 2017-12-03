@@ -32,22 +32,25 @@ class SymbolTable:
         self.indexes['var'] = 0
 
     def define(self, name, entry_type, kind):
-        kind = kind.upper()
+        kind = kind.lower()
         if kind in self.indexes:
             self.indexes[kind] += 1
         else:
             self.indexes[kind] = 0
-        new_entry = SymbolTableEntry(entry_type, kind, self.var_count(kind))
-        if kind in ('ARG', 'VAR'):
+        new_entry = SymbolTableEntry(entry_type, kind, self.var_count(kind) - 1)
+        if kind in ('arg', 'var'):
             self.subroutine_hash[name] = new_entry
         else:
             self.class_hash[name] = new_entry
 
     def var_count(self, kind):
+        print(kind)
+        print(self.indexes)
+        kind = kind.lower()
         if kind not in self.indexes:
             print('kind %s not found in indexes' % kind)
             print(self.indexes)
-        return self.indexes[kind.upper()]
+        return self.indexes[kind]
 
     def kind_of(self, var_name):
         if var_name in self.subroutine_hash:

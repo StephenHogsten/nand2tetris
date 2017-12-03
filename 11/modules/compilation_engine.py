@@ -1,17 +1,36 @@
 """outputs tokens into xml"""
 
 from modules.symbol_table import SymbolTable
+from modules.vm_writer import VMWriter
+
+ARITHMETIC_DICT = {
+    '+': 'add',
+    '-': 'sub',
+    '=': 'eq',
+    '>': 'gt',
+    '<': 'lt',
+    '&': 'and',
+    '|': 'or'
+}
+
+UNARY_DICT = {
+    '-': 'neg',
+    '~': 'not'
+}
 
 # TODO - it may be worth making an enum or something for keywords and token types to avoid typos
 
 class CompilationEngine:
     """translate tokens into xml file"""
-    def __init__(self, tokenizer, xml_file):
+    def __init__(self, tokenizer, xml_file, vm_file):
         """gets ready to create compiled file"""
         self.tokenizer = tokenizer
         self.xml_file = xml_file
         self.indent_level = 0
         self.symbol_table = None
+        self.vm = VMWriter(vm_file)
+        self.class_name = ''
+        self.if_index = 0
 
     def check_current_token(self, expected_types, expected_tokens=None, silent=False, skip_advance=False):
         """try to get the current token and return it in [token_type, token, error], advancing if successful
@@ -100,6 +119,7 @@ class CompilationEngine:
             return False
         self.output_line('identifier', token, kind='class', usage='declared')
         self.symbol_table = SymbolTable()
+        self.class_name = token
 
         # '{'
         [token_type, token, error] = self.check_current_token(['SYMBOL'], ['{'])
@@ -210,6 +230,8 @@ class CompilationEngine:
             return False
         self.output_line(token_type.lower(), token, kind='subroutine', usage='declared' )
 
+        vm_function = token
+
         # (
         [token_type, token, error] = self.check_current_token(['SYMBOL'], ['('])
         if error:
@@ -237,6 +259,9 @@ class CompilationEngine:
         # varDec*
         while self.compile_var_dec(True):
             continue
+
+        # VM - write the function declaration (I'm not positive anything above matter outside of the symbol table)
+        self.vm.write_function("%s.%s" % (self.class_name, vm_function), self.symbol_table.var_count('var'))
 
         # statements
         if not self.compile_statements():
@@ -434,6 +459,18 @@ class CompilationEngine:
             return False
         self.output_line(token_type.lower(), token)
 
+        # VM - set the variable
+        if var_kind == 'field':
+            # set this (pointer) to the object, then get the appropriate index for the field
+            self.vm.write_push('arg', 0)
+            self.vm.write_pop('pointer', 0)
+            # what's on top is what we want to put in the field variable
+            self.vm.write_pop('this', var_index)
+        elif var_kind == 'var':
+            self.vm.write_pop('local', var_index)
+        else:
+            self.vm.write_pop(var_kind, var_index)
+
         # finish up
         self.output_line('letStatement', include_open=False)
         return True
@@ -465,6 +502,12 @@ class CompilationEngine:
             return False
         self.output_line(token_type.lower(), token)
 
+        # VM - flip the conditional, then skip the initial statements if it's true
+        self.vm.write_arithmetic('not')
+        if_index = self.if_index
+        self.if_index += 2
+        self.vm.write_if("if_%i" % if_index)
+
         # {
         [token_type, token, error] = self.check_current_token(['SYMBOL'], '{')
         if error:
@@ -480,6 +523,10 @@ class CompilationEngine:
         if error:
             return False
         self.output_line(token_type.lower(), token)
+
+        # VM - make the label we'd skip to, skip over the next statements unless we got here without skipping
+        self.vm.write_goto("if_%i" % (if_index + 1))
+        self.vm.write_label("if_%i" % if_index)
 
         # else { statements } ?
         [token_type, token, error] = self.check_current_token(['KEYWORD'], ['else'], silent=True)
@@ -502,14 +549,23 @@ class CompilationEngine:
                 return False
             self.output_line(token_type.lower(), token)
         
+        # VM - label as the place to return to
+        self.vm.write_label("if_%i" % (if_index + 1))
+
         # finish up
         self.output_line('ifStatement', include_open=False)
         return True
 
+    
     def compile_while(self):
         """while statement is
         'while' '(' expression ')' '{' statements '}' """
         
+        # VM - label the top of the loop to return to
+        while_index = self.if_index
+        self.if_index += 2
+        self.vm.write_label("while_%i" % while_index)
+
         # while
         [token_type, token, error] = self.check_current_token(['KEYWORD'], ['while'])
         if error:
@@ -533,6 +589,12 @@ class CompilationEngine:
             return False
         self.output_line(token_type.lower(), token)
 
+        # VM - skip the statements if the condition is not true
+        self.vm.write_arithmetic('not')
+        # print(self.if_index)
+        # print(type(self.if_index))
+        self.vm.write_if("while_%i" % (while_index + 1))
+
         # { 
         [token_type, token, error] = self.check_current_token(['SYMBOL'], ['{'])
         if error:
@@ -548,6 +610,11 @@ class CompilationEngine:
         if error:
             return False
         self.output_line(token_type.lower(), token)
+
+        # VM go back to the top to re-evaluate
+        self.vm.write_goto('while_%i' % while_index)
+        # VM label this as the place to skip to when the loop ends
+        self.vm.write_label('while_%i' % (while_index + 1))
 
         # finish up
         self.output_line('whileStatement', include_open=False)
@@ -592,7 +659,9 @@ class CompilationEngine:
         self.output_line(token_type.lower(), token)
 
         # expression?
-        self.compile_expression(True)       # we don't care if it fails - it's optional
+        # pass true to prevent 0 parts to the expression to cause a crash
+        if not self.compile_expression(True):
+            self.vm.write_push('const', 0)
 
         # ;
         [token_type, token, error] = self.check_current_token(['SYMBOL'], [';'])
@@ -602,22 +671,30 @@ class CompilationEngine:
 
         # finish up
         self.output_line('returnStatement', include_open=False)
+        self.vm.write_return()
         return True
     
-    def compile_subroutine_call(self, allow_zero=False):
+    def compile_subroutine_call(self, allow_zero=False, first_token=False, second_token=False):
         """subroutine call is 
-        ((className | varName) '.')? subroutineName '(' expressionList ')' """
+        ((className | varName) '.')? subroutineName '(' expressionList ')' 
+        passing first_token and second_token means we've already retrieved them and we're just calling this to handle the subroutine call"""
 
-        [token_type, token, error] = self.check_current_token(['IDENTIFIER'])
-        if error:
-            return False
-        first_token = [token_type.lower(), token]
+        if not first_token:
+            [token_type, token, error] = self.check_current_token(['IDENTIFIER'])
+            if error:
+                return False
+            first_token = [token_type.lower(), token]
 
-        [token_type, token, error] = self.check_current_token(['SYMBOL'], ['.', '('])
-        if error:
-            return False
-        second_token = [token_type.lower(), token]
+        if not second_token:
+            [token_type, token, error] = self.check_current_token(['SYMBOL'], ['.', '('])
+            if error:
+                return False
+            second_token = [token_type.lower(), token]
+        else:
+            [token_type, token] = second_token
+
         if token == '.':
+            # we have XXX.
             first_token += [True, True, 'class', 'used']
             self.output_line(*first_token)
             self.output_line(*second_token)
@@ -626,18 +703,45 @@ class CompilationEngine:
             if error:
                 return False
             self.output_line(token_type.lower(), token, kind='subroutine', usage='used')
+            
+            #VM - check whether it's a method call by whether the function is contained in a class or an object
+            object_name = first_token[1]
+            kind = self.symbol_table.kind_of(object_name)
+            if kind is None:
+                # we're calling a class function - don't need to push 'this'
+                n_args = [0]
+                function_name = "%s.%s" % (object_name, token)
+            else:
+                idx = self.symbol_table.index_of(object_name)
+                function_name = "%s.%s" % (kind, token)
+                if kind == 'static':
+                    self.vm.write_push('static', idx)
+                elif kind == 'field':
+                    self.vm.write_push('this', idx)
+                elif kind == 'arg':
+                    self.vm.write_push('arg', idx)
+                elif kind == 'var':
+                    self.vm.write_push('local', idx)
+                n_args = [1]
 
             [token_type, token, error] = self.check_current_token(['SYMBOL'], ['('])
             if error:
                 return False
             self.output_line(token_type.lower(), token)
         else:
+            # we have functionName(
+            # no xxx. means that it's a method on the current object (instance method) 
             first_token += [True, True, 'subroutine', 'used']
             self.output_line(*first_token)
             self.output_line(*second_token)
+            # VM - push this onto the stack
+            self.vm.write_push('pointer', 0)
+            # set the function name to just the first token
+            function_name = first_token[1]
+            n_args = [1]
 
         # expressionList
-        if not self.compile_expression_list():
+        if not self.compile_expression_list(n_args):
             return False
 
         # )
@@ -645,6 +749,9 @@ class CompilationEngine:
         if error:
             return False
         self.output_line(token_type.lower(), token)
+
+        # VM - actually call the function now that the arguments are on the stack
+        self.vm.write_call(function_name, n_args[0])
 
         # finish up
         return True
@@ -668,6 +775,16 @@ class CompilationEngine:
 
             if not self.compile_term():
                 return False
+            else:
+                # perform operation if we found a term
+                if token in ARITHMETIC_DICT:
+                    self.vm.write_arithmetic(ARITHMETIC_DICT[token])
+                elif token == '*':
+                    self.vm.write_call('Math.multiply', 2)
+                elif token == '/':
+                    self.vm.write_call('Math.divide', 2)
+                else:
+                    print("Invalid operation: %s" % token)
 
         # finish up
         self.output_line('expression', include_open=False)
@@ -695,9 +812,22 @@ class CompilationEngine:
         # constants don't simply translate with .lower()
         if token_type == 'INT_CONST':
             self.output_line('integerConstant', token)
+            self.vm.write_push('const', int(token))
         elif token_type == 'STRING_CONST':
             token_string = token[1: len(token) - 1]     # don't include the "
             self.output_line('stringConstant', token_string)
+            self.vm.write_push('const', len(token_string))
+            self.vm.write_call("String.new", 1)
+            for i in token_string:
+                self.vm.write_push('const', ord(i))
+                self.vm.write_call('String.appendChar', 2)  # each should push the resulting object back on top of stack
+            # when we leave the loop, the string object shold be complete and left on top
+        elif token_type == 'KEYWORD':
+            if token == 'true':
+                self.vm.write_push('const', 1)     # true - 111...
+                self.vm.write_arithmetic('neg')
+            else:
+                self.vm.write_push('const', 0)  # null or false - 000...
         elif token_type == 'IDENTIFIER':
             var_kind = self.symbol_table.kind_of(token)
             var_index = self.symbol_table.index_of(token)
@@ -706,12 +836,13 @@ class CompilationEngine:
             self.output_line(token_type.lower(), token)
 
         # do we need to keep going, or is it just a one token 
-        if token in ('INT_CONST', 'STRING_CONST', 'KEYWORD'):
+        if token_type in ('INT_CONST', 'STRING_CONST', 'KEYWORD'):
             pass        # nothing we have to do further
         elif token in ('~', '-'):       
             # -unaryOp- term
             if not self.compile_term():
                 return False
+            self.vm.write_arithmetic(UNARY_DICT[token])
         elif token == '(':
             # -(- expression )
             if not self.compile_expression():
@@ -723,48 +854,22 @@ class CompilationEngine:
             self.output_line(token_type.lower(), token)
         else:
             # at this point it's either just varName, varName [ expression ], or subroutine
+            first_token = [token_type.lower(), token]        # in case we're going to compile_subroutine_call
+
             [token_type, token, error] = self.check_current_token(['SYMBOL'], ['(', '.', '['], silent=True)
             if error:
-                pass    # just a varname - done
+                # just a varname, just push to stack. var_kind and var_index **should've** been set above
+                if var_kind == 'field':
+                    self.vm.write_push('local', 0)      # push 'this' address
+                    self.vm.write_pop('pointer', 0)     # set pointer so 'this' is our 'this'
+                    self.vm.write_push('this', var_index)   # access the index this variable is located as
+                elif var_kind == 'var':
+                    self.vm.write_push('local', var_index)
+                else:
+                    self.vm.write_push(var_kind, var_index)
             else:
                 self.output_line(token_type.lower(), token)
-                if token == '(':
-                    # -subroutineName (- expressionList )
-                    if not self.compile_expression_list():
-                        return False
-
-                    [token_type, token, error] = self.check_current_token(['SYMBOL'], [')'])
-                    if error:
-                        return False
-                    self.output_line(token_type.lower(), token)
-                elif token == '.': 
-                    # -class .- subroutine ( expressionList )
-                    # I feel it's easier (though really it's worse) to just not use the subroutine call fn
-                    # subroutine
-                    [token_type, token, error] = self.check_current_token(['IDENTIFIER'])
-                    if error:
-                        return False
-                    var_kind = self.symbol_table.kind_of(token)
-                    var_index = self.symbol_table.index_of(token)
-                    self.output_line(token_type.lower(), token, kind=var_kind, usage='used', index=var_index)
-
-                    # ( 
-                    [token_type, token, error] = self.check_current_token(['SYMBOL'], ['('])
-                    if error:
-                        return False
-                    self.output_line(token_type.lower(), token)
-
-                    # expressionList
-                    if not self.compile_expression_list():
-                        return False
-                        
-                    # )
-                    [token_type, token, error] = self.check_current_token(['SYMBOL'], [')'])
-                    if error:
-                        return False
-                    self.output_line(token_type.lower(), token)
-
-                elif token == '[':
+                if token == '[':
                     # -varName [- expression ]
                     if not self.compile_expression():
                         return False
@@ -773,19 +878,28 @@ class CompilationEngine:
                     if error:
                         return False
                     self.output_line(token_type.lower(), token)
+                    # TODO - set that to the base of the object, add to the top of the stack to get the correct address, use pointer to set the address to that, then pop that
+                else:
+                    # prepare to call subroutine handler
+                    second_token = [token_type.lower(), token]
+                    self.compile_subroutine_call(first_token=first_token, second_token=second_token)
+
+        # TODO - I think I need to handle when the first token is 'this'
 
         # finish up
         self.output_line('term', include_open=False)
         return True
 
-    def compile_expression_list(self):
+    def compile_expression_list(self, n_args):
         """expression list is 
         (expression (',' expression)* )?
-        allows zero implicitly"""
+        allows zero implicitly
+        n_args is an array where the first index is a count of arguments so it can be passed back"""
         self.output_line('expressionList', include_close=False)
 
         # expression ... ?
         if self.compile_expression(allow_zero=True):
+            n_args[0] += 1
 
             # , expression *
             while True:
@@ -796,6 +910,9 @@ class CompilationEngine:
 
                 if not self.compile_expression():
                     return False
+
+                # we just added another argument
+                n_args[0] += 1
 
         # finish up
         self.output_line('expressionList', include_open=False)

@@ -1,3 +1,5 @@
+"""splits a .jack file into a list of tokens (removing comments) and provides methods to traverse the list"""
+
 import re
 
 class JackTokenizer:

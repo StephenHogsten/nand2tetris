@@ -26,7 +26,9 @@ def one_file(filename):
     # vm_filename = file_base + '.vm'
     tokenizer = JackTokenizer(filename)
     xml_filename = file_base + '.xml'
+    vm_filename = file_base + '.vm'
     xml_file = open(xml_filename, 'w')
-    engine = CompilationEngine(tokenizer, xml_file)
+    vm_file = open(vm_filename, 'w')
+    engine = CompilationEngine(tokenizer, xml_file, vm_file)
     engine.compile_class()
     xml_file.close()
