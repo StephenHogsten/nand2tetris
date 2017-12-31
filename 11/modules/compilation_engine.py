@@ -456,7 +456,7 @@ class CompilationEngine:
             self.output_line(token_type.lower(), token)
 
             # expression
-            if not self.compile_expression(expression_statements=expression_statements):
+            if not self.compile_expression():
                 return False
 
             [token_type, token, error] = self.check_current_token(['SYMBOL'], [']'])
@@ -794,7 +794,7 @@ class CompilationEngine:
         return True
         
 
-    def compile_expression(self, allow_zero=False, expression_statements=None):
+    def compile_expression(self, allow_zero=False):
         """expression is 
         term (op term)*
         where op is one of: + - * / & | < > = """
@@ -898,12 +898,7 @@ class CompilationEngine:
             [token_type, token, error] = self.check_current_token(['SYMBOL'], ['(', '.', '['], silent=True)
             if error:
                 # just a varname, just push to stack. var_kind and var_index **should've** been set above
-                if var_kind == 'field':
-                    self.vm.write_push('this', var_index)   # access the index this variable is located as
-                elif var_kind == 'var':
-                    self.vm.write_push('local', var_index)
-                else:
-                    self.vm.write_push(var_kind, var_index)
+                self.vm.write_push(var_kind, var_index)
             else:
                 self.output_line(token_type.lower(), token)
                 if token == '[':
@@ -915,7 +910,12 @@ class CompilationEngine:
                     if error:
                         return False
                     self.output_line(token_type.lower(), token)
-                    # TODO - set that to the base of the object, add to the top of the stack to get the correct address, use pointer to set the address to that, then pop that
+                    # VM - add this to the variable to set the address for 'that' then retrieve the value there
+                    self.vm.write_push(var_kind, var_index)
+                    self.vm.write_arithmetic('add')
+                    self.vm.write_pop('pointer', 1)
+                    self.vm.write_push('that', 0)
+
                 else:
                     # prepare to call subroutine handler
                     second_token = [token_type.lower(), token]

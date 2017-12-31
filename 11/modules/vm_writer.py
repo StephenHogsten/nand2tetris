@@ -25,8 +25,7 @@ class VMWriter:
         segment is const | arg | local | static | this | that | pointer | temp"""
         if segment in SEGMENT_DICT:
             segment = SEGMENT_DICT[segment]
-        else: 
-            self.write("push %s %i" % (segment, index))
+        self.write("push %s %i" % (segment, index))
         self.newline()
 
     def write_pop(self, segment, index):
