@@ -15,7 +15,7 @@
       <varDec>
         <keyword> var </keyword>
         <identifier> PongGame </identifier>
-        <identifier usage="declared" kind="ARG" index="0"> game </identifier>
+        <identifier usage="declared" kind="ARG" index="1"> game </identifier>
         <symbol> ; </symbol>
       </varDec>
       <statements>
@@ -32,13 +32,15 @@
         </doStatement>
         <letStatement>
           <keyword> let </keyword>
-          <identifier usage="used" kind="VAR" index="0"> game </identifier>
+          <identifier usage="used" kind="var" index="0"> game </identifier>
           <symbol> = </symbol>
           <expression>
             <term>
               <identifier usage="used"> PongGame </identifier>
               <symbol> . </symbol>
-              <identifier usage="used"> getInstance </identifier>
+              <identifier usage="used" kind="class"> PongGame </identifier>
+              <symbol> . </symbol>
+              <identifier usage="used" kind="subroutine"> getInstance </identifier>
               <symbol> ( </symbol>
               <expressionList>
               </expressionList>

@@ -211,18 +211,19 @@ class CompilationEngine:
         self.output_line('subroutineDec', include_close=False)
         self.output_line(token_type.lower(), token)
 
+        # reset subroutine indexes
+        self.symbol_table.start_subroutine()
+
         # save off if it's a constructor
         if token == 'constructor':
             constructor = True
         elif token == 'method':
             constructor = False
             method = True
+            self.symbol_table.define('this', 'this', 'arg')
         else:
             constructor = False
             method = False
-
-        # reset subroutine indexes
-        self.symbol_table.start_subroutine()
 
         # void | type 
         [token_type, token, error] = self.check_current_token(['KEYWORD', 'IDENTIFIER'], ['void', 'int', 'char', 'boolean'])

@@ -5,23 +5,23 @@
   <classVarDec>
     <keyword> field </keyword>
     <keyword> int </keyword>
-    <identifier usage="declared" kind="FIELD" index="0"> x </identifier>
+    <identifier usage="declared" kind="FIELD" index="1"> x </identifier>
     <symbol> , </symbol>
-    <identifier usage="declared" kind="FIELD" index="1"> y </identifier>
+    <identifier usage="declared" kind="FIELD" index="2"> y </identifier>
     <symbol> ; </symbol>
   </classVarDec>
   <classVarDec>
     <keyword> field </keyword>
     <keyword> int </keyword>
-    <identifier usage="declared" kind="FIELD" index="2"> width </identifier>
+    <identifier usage="declared" kind="FIELD" index="3"> width </identifier>
     <symbol> , </symbol>
-    <identifier usage="declared" kind="FIELD" index="3"> height </identifier>
+    <identifier usage="declared" kind="FIELD" index="4"> height </identifier>
     <symbol> ; </symbol>
   </classVarDec>
   <classVarDec>
     <keyword> field </keyword>
     <keyword> int </keyword>
-    <identifier usage="declared" kind="FIELD" index="4"> direction </identifier>
+    <identifier usage="declared" kind="FIELD" index="5"> direction </identifier>
     <symbol> ; </symbol>
   </classVarDec>
   <subroutineDec>
@@ -31,16 +31,16 @@
     <symbol> ( </symbol>
     <parameterList>
       <keyword> int </keyword>
-      <identifier usage="declared" kind="ARG" index="0"> Ax </identifier>
+      <identifier usage="declared" kind="ARG" index="1"> Ax </identifier>
       <symbol> , </symbol>
       <keyword> int </keyword>
-      <identifier usage="declared" kind="ARG" index="1"> Ay </identifier>
+      <identifier usage="declared" kind="ARG" index="2"> Ay </identifier>
       <symbol> , </symbol>
       <keyword> int </keyword>
-      <identifier usage="declared" kind="ARG" index="2"> Awidth </identifier>
+      <identifier usage="declared" kind="ARG" index="3"> Awidth </identifier>
       <symbol> , </symbol>
       <keyword> int </keyword>
-      <identifier usage="declared" kind="ARG" index="3"> Aheight </identifier>
+      <identifier usage="declared" kind="ARG" index="4"> Aheight </identifier>
     </parameterList>
     <symbol> ) </symbol>
     <subroutineBody>
@@ -48,51 +48,51 @@
       <statements>
         <letStatement>
           <keyword> let </keyword>
-          <identifier usage="used" kind="FIELD" index="0"> x </identifier>
+          <identifier usage="used" kind="field" index="0"> x </identifier>
           <symbol> = </symbol>
           <expression>
             <term>
-              <identifier usage="used" kind="ARG" index="0"> Ax </identifier>
+              <identifier usage="used" kind="arg" index="0"> Ax </identifier>
             </term>
           </expression>
           <symbol> ; </symbol>
         </letStatement>
         <letStatement>
           <keyword> let </keyword>
-          <identifier usage="used" kind="FIELD" index="1"> y </identifier>
+          <identifier usage="used" kind="field" index="1"> y </identifier>
           <symbol> = </symbol>
           <expression>
             <term>
-              <identifier usage="used" kind="ARG" index="1"> Ay </identifier>
+              <identifier usage="used" kind="arg" index="1"> Ay </identifier>
             </term>
           </expression>
           <symbol> ; </symbol>
         </letStatement>
         <letStatement>
           <keyword> let </keyword>
-          <identifier usage="used" kind="FIELD" index="2"> width </identifier>
+          <identifier usage="used" kind="field" index="2"> width </identifier>
           <symbol> = </symbol>
           <expression>
             <term>
-              <identifier usage="used" kind="ARG" index="2"> Awidth </identifier>
+              <identifier usage="used" kind="arg" index="2"> Awidth </identifier>
             </term>
           </expression>
           <symbol> ; </symbol>
         </letStatement>
         <letStatement>
           <keyword> let </keyword>
-          <identifier usage="used" kind="FIELD" index="3"> height </identifier>
+          <identifier usage="used" kind="field" index="3"> height </identifier>
           <symbol> = </symbol>
           <expression>
             <term>
-              <identifier usage="used" kind="ARG" index="3"> Aheight </identifier>
+              <identifier usage="used" kind="arg" index="3"> Aheight </identifier>
             </term>
           </expression>
           <symbol> ; </symbol>
         </letStatement>
         <letStatement>
           <keyword> let </keyword>
-          <identifier usage="used" kind="FIELD" index="4"> direction </identifier>
+          <identifier usage="used" kind="field" index="4"> direction </identifier>
           <symbol> = </symbol>
           <expression>
             <term>
@@ -114,7 +114,6 @@
           <keyword> return </keyword>
           <expression>
             <term>
-              <keyword> this </keyword>
             </term>
           </expression>
           <symbol> ; </symbol>
@@ -143,7 +142,6 @@
           <expressionList>
             <expression>
               <term>
-                <keyword> this </keyword>
               </term>
             </expression>
           </expressionList>
@@ -178,7 +176,6 @@
           <expressionList>
             <expression>
               <term>
-                <keyword> true </keyword>
               </term>
             </expression>
           </expressionList>
@@ -222,7 +219,6 @@
           <expressionList>
             <expression>
               <term>
-                <keyword> false </keyword>
               </term>
             </expression>
           </expressionList>
@@ -266,33 +262,33 @@
           <expressionList>
             <expression>
               <term>
-                <identifier usage="used" kind="FIELD" index="0"> x </identifier>
+                <identifier usage="used" kind="field" index="0"> x </identifier>
               </term>
             </expression>
             <symbol> , </symbol>
             <expression>
               <term>
-                <identifier usage="used" kind="FIELD" index="1"> y </identifier>
+                <identifier usage="used" kind="field" index="1"> y </identifier>
               </term>
             </expression>
             <symbol> , </symbol>
             <expression>
               <term>
-                <identifier usage="used" kind="FIELD" index="0"> x </identifier>
+                <identifier usage="used" kind="field" index="0"> x </identifier>
               </term>
               <symbol> + </symbol>
               <term>
-                <identifier usage="used" kind="FIELD" index="2"> width </identifier>
+                <identifier usage="used" kind="field" index="2"> width </identifier>
               </term>
             </expression>
             <symbol> , </symbol>
             <expression>
               <term>
-                <identifier usage="used" kind="FIELD" index="1"> y </identifier>
+                <identifier usage="used" kind="field" index="1"> y </identifier>
               </term>
               <symbol> + </symbol>
               <term>
-                <identifier usage="used" kind="FIELD" index="3"> height </identifier>
+                <identifier usage="used" kind="field" index="3"> height </identifier>
               </term>
             </expression>
           </expressionList>
@@ -314,7 +310,7 @@
     <symbol> ( </symbol>
     <parameterList>
       <keyword> int </keyword>
-      <identifier usage="declared" kind="ARG" index="4"> Adirection </identifier>
+      <identifier usage="declared" kind="ARG" index="2"> Adirection </identifier>
     </parameterList>
     <symbol> ) </symbol>
     <subroutineBody>
@@ -322,11 +318,11 @@
       <statements>
         <letStatement>
           <keyword> let </keyword>
-          <identifier usage="used" kind="FIELD" index="4"> direction </identifier>
+          <identifier usage="used" kind="field" index="4"> direction </identifier>
           <symbol> = </symbol>
           <expression>
             <term>
-              <identifier usage="used" kind="ARG" index="4"> Adirection </identifier>
+              <identifier usage="used" kind="arg" index="1"> Adirection </identifier>
             </term>
           </expression>
           <symbol> ; </symbol>
@@ -354,7 +350,7 @@
           <keyword> return </keyword>
           <expression>
             <term>
-              <identifier usage="used" kind="FIELD" index="0"> x </identifier>
+              <identifier usage="used" kind="field" index="0"> x </identifier>
             </term>
           </expression>
           <symbol> ; </symbol>
@@ -378,11 +374,11 @@
           <keyword> return </keyword>
           <expression>
             <term>
-              <identifier usage="used" kind="FIELD" index="0"> x </identifier>
+              <identifier usage="used" kind="field" index="0"> x </identifier>
             </term>
             <symbol> + </symbol>
             <term>
-              <identifier usage="used" kind="FIELD" index="2"> width </identifier>
+              <identifier usage="used" kind="field" index="2"> width </identifier>
             </term>
           </expression>
           <symbol> ; </symbol>
@@ -398,7 +394,7 @@
     <symbol> ( </symbol>
     <parameterList>
       <keyword> int </keyword>
-      <identifier usage="declared" kind="ARG" index="5"> Awidth </identifier>
+      <identifier usage="declared" kind="ARG" index="2"> Awidth </identifier>
     </parameterList>
     <symbol> ) </symbol>
     <subroutineBody>
@@ -415,11 +411,11 @@
         </doStatement>
         <letStatement>
           <keyword> let </keyword>
-          <identifier usage="used" kind="FIELD" index="2"> width </identifier>
+          <identifier usage="used" kind="field" index="2"> width </identifier>
           <symbol> = </symbol>
           <expression>
             <term>
-              <identifier usage="used" kind="ARG" index="5"> Awidth </identifier>
+              <identifier usage="used" kind="arg" index="1"> Awidth </identifier>
             </term>
           </expression>
           <symbol> ; </symbol>
@@ -457,7 +453,7 @@
           <symbol> ( </symbol>
           <expression>
             <term>
-              <identifier usage="used" kind="FIELD" index="4"> direction </identifier>
+              <identifier usage="used" kind="field" index="4"> direction </identifier>
             </term>
             <symbol> = </symbol>
             <term>
@@ -469,11 +465,11 @@
           <statements>
             <letStatement>
               <keyword> let </keyword>
-              <identifier usage="used" kind="FIELD" index="0"> x </identifier>
+              <identifier usage="used" kind="field" index="0"> x </identifier>
               <symbol> = </symbol>
               <expression>
                 <term>
-                  <identifier usage="used" kind="FIELD" index="0"> x </identifier>
+                  <identifier usage="used" kind="field" index="0"> x </identifier>
                 </term>
                 <symbol> - </symbol>
                 <term>
@@ -487,7 +483,7 @@
               <symbol> ( </symbol>
               <expression>
                 <term>
-                  <identifier usage="used" kind="FIELD" index="0"> x </identifier>
+                  <identifier usage="used" kind="field" index="0"> x </identifier>
                 </term>
                 <symbol> &lt; </symbol>
                 <term>
@@ -499,7 +495,7 @@
               <statements>
                 <letStatement>
                   <keyword> let </keyword>
-                  <identifier usage="used" kind="FIELD" index="0"> x </identifier>
+                  <identifier usage="used" kind="field" index="0"> x </identifier>
                   <symbol> = </symbol>
                   <expression>
                     <term>
@@ -520,7 +516,6 @@
               <expressionList>
                 <expression>
                   <term>
-                    <keyword> false </keyword>
                   </term>
                 </expression>
               </expressionList>
@@ -539,11 +534,11 @@
                     <symbol> ( </symbol>
                     <expression>
                       <term>
-                        <identifier usage="used" kind="FIELD" index="0"> x </identifier>
+                        <identifier usage="used" kind="field" index="0"> x </identifier>
                       </term>
                       <symbol> + </symbol>
                       <term>
-                        <identifier usage="used" kind="FIELD" index="2"> width </identifier>
+                        <identifier usage="used" kind="field" index="2"> width </identifier>
                       </term>
                     </expression>
                     <symbol> ) </symbol>
@@ -556,7 +551,7 @@
                 <symbol> , </symbol>
                 <expression>
                   <term>
-                    <identifier usage="used" kind="FIELD" index="1"> y </identifier>
+                    <identifier usage="used" kind="field" index="1"> y </identifier>
                   </term>
                 </expression>
                 <symbol> , </symbol>
@@ -565,11 +560,11 @@
                     <symbol> ( </symbol>
                     <expression>
                       <term>
-                        <identifier usage="used" kind="FIELD" index="0"> x </identifier>
+                        <identifier usage="used" kind="field" index="0"> x </identifier>
                       </term>
                       <symbol> + </symbol>
                       <term>
-                        <identifier usage="used" kind="FIELD" index="2"> width </identifier>
+                        <identifier usage="used" kind="field" index="2"> width </identifier>
                       </term>
                     </expression>
                     <symbol> ) </symbol>
@@ -582,11 +577,11 @@
                 <symbol> , </symbol>
                 <expression>
                   <term>
-                    <identifier usage="used" kind="FIELD" index="1"> y </identifier>
+                    <identifier usage="used" kind="field" index="1"> y </identifier>
                   </term>
                   <symbol> + </symbol>
                   <term>
-                    <identifier usage="used" kind="FIELD" index="3"> height </identifier>
+                    <identifier usage="used" kind="field" index="3"> height </identifier>
                   </term>
                 </expression>
               </expressionList>
@@ -602,7 +597,6 @@
               <expressionList>
                 <expression>
                   <term>
-                    <keyword> true </keyword>
                   </term>
                 </expression>
               </expressionList>
@@ -618,19 +612,19 @@
               <expressionList>
                 <expression>
                   <term>
-                    <identifier usage="used" kind="FIELD" index="0"> x </identifier>
+                    <identifier usage="used" kind="field" index="0"> x </identifier>
                   </term>
                 </expression>
                 <symbol> , </symbol>
                 <expression>
                   <term>
-                    <identifier usage="used" kind="FIELD" index="1"> y </identifier>
+                    <identifier usage="used" kind="field" index="1"> y </identifier>
                   </term>
                 </expression>
                 <symbol> , </symbol>
                 <expression>
                   <term>
-                    <identifier usage="used" kind="FIELD" index="0"> x </identifier>
+                    <identifier usage="used" kind="field" index="0"> x </identifier>
                   </term>
                   <symbol> + </symbol>
                   <term>
@@ -640,11 +634,11 @@
                 <symbol> , </symbol>
                 <expression>
                   <term>
-                    <identifier usage="used" kind="FIELD" index="1"> y </identifier>
+                    <identifier usage="used" kind="field" index="1"> y </identifier>
                   </term>
                   <symbol> + </symbol>
                   <term>
-                    <identifier usage="used" kind="FIELD" index="3"> height </identifier>
+                    <identifier usage="used" kind="field" index="3"> height </identifier>
                   </term>
                 </expression>
               </expressionList>
@@ -658,11 +652,11 @@
           <statements>
             <letStatement>
               <keyword> let </keyword>
-              <identifier usage="used" kind="FIELD" index="0"> x </identifier>
+              <identifier usage="used" kind="field" index="0"> x </identifier>
               <symbol> = </symbol>
               <expression>
                 <term>
-                  <identifier usage="used" kind="FIELD" index="0"> x </identifier>
+                  <identifier usage="used" kind="field" index="0"> x </identifier>
                 </term>
                 <symbol> + </symbol>
                 <term>
@@ -679,11 +673,11 @@
                   <symbol> ( </symbol>
                   <expression>
                     <term>
-                      <identifier usage="used" kind="FIELD" index="0"> x </identifier>
+                      <identifier usage="used" kind="field" index="0"> x </identifier>
                     </term>
                     <symbol> + </symbol>
                     <term>
-                      <identifier usage="used" kind="FIELD" index="2"> width </identifier>
+                      <identifier usage="used" kind="field" index="2"> width </identifier>
                     </term>
                   </expression>
                   <symbol> ) </symbol>
@@ -698,7 +692,7 @@
               <statements>
                 <letStatement>
                   <keyword> let </keyword>
-                  <identifier usage="used" kind="FIELD" index="0"> x </identifier>
+                  <identifier usage="used" kind="field" index="0"> x </identifier>
                   <symbol> = </symbol>
                   <expression>
                     <term>
@@ -706,7 +700,7 @@
                     </term>
                     <symbol> - </symbol>
                     <term>
-                      <identifier usage="used" kind="FIELD" index="2"> width </identifier>
+                      <identifier usage="used" kind="field" index="2"> width </identifier>
                     </term>
                   </expression>
                   <symbol> ; </symbol>
@@ -723,7 +717,6 @@
               <expressionList>
                 <expression>
                   <term>
-                    <keyword> false </keyword>
                   </term>
                 </expression>
               </expressionList>
@@ -739,7 +732,7 @@
               <expressionList>
                 <expression>
                   <term>
-                    <identifier usage="used" kind="FIELD" index="0"> x </identifier>
+                    <identifier usage="used" kind="field" index="0"> x </identifier>
                   </term>
                   <symbol> - </symbol>
                   <term>
@@ -749,13 +742,13 @@
                 <symbol> , </symbol>
                 <expression>
                   <term>
-                    <identifier usage="used" kind="FIELD" index="1"> y </identifier>
+                    <identifier usage="used" kind="field" index="1"> y </identifier>
                   </term>
                 </expression>
                 <symbol> , </symbol>
                 <expression>
                   <term>
-                    <identifier usage="used" kind="FIELD" index="0"> x </identifier>
+                    <identifier usage="used" kind="field" index="0"> x </identifier>
                   </term>
                   <symbol> - </symbol>
                   <term>
@@ -765,11 +758,11 @@
                 <symbol> , </symbol>
                 <expression>
                   <term>
-                    <identifier usage="used" kind="FIELD" index="1"> y </identifier>
+                    <identifier usage="used" kind="field" index="1"> y </identifier>
                   </term>
                   <symbol> + </symbol>
                   <term>
-                    <identifier usage="used" kind="FIELD" index="3"> height </identifier>
+                    <identifier usage="used" kind="field" index="3"> height </identifier>
                   </term>
                 </expression>
               </expressionList>
@@ -785,7 +778,6 @@
               <expressionList>
                 <expression>
                   <term>
-                    <keyword> true </keyword>
                   </term>
                 </expression>
               </expressionList>
@@ -804,11 +796,11 @@
                     <symbol> ( </symbol>
                     <expression>
                       <term>
-                        <identifier usage="used" kind="FIELD" index="0"> x </identifier>
+                        <identifier usage="used" kind="field" index="0"> x </identifier>
                       </term>
                       <symbol> + </symbol>
                       <term>
-                        <identifier usage="used" kind="FIELD" index="2"> width </identifier>
+                        <identifier usage="used" kind="field" index="2"> width </identifier>
                       </term>
                     </expression>
                     <symbol> ) </symbol>
@@ -821,27 +813,27 @@
                 <symbol> , </symbol>
                 <expression>
                   <term>
-                    <identifier usage="used" kind="FIELD" index="1"> y </identifier>
+                    <identifier usage="used" kind="field" index="1"> y </identifier>
                   </term>
                 </expression>
                 <symbol> , </symbol>
                 <expression>
                   <term>
-                    <identifier usage="used" kind="FIELD" index="0"> x </identifier>
+                    <identifier usage="used" kind="field" index="0"> x </identifier>
                   </term>
                   <symbol> + </symbol>
                   <term>
-                    <identifier usage="used" kind="FIELD" index="2"> width </identifier>
+                    <identifier usage="used" kind="field" index="2"> width </identifier>
                   </term>
                 </expression>
                 <symbol> , </symbol>
                 <expression>
                   <term>
-                    <identifier usage="used" kind="FIELD" index="1"> y </identifier>
+                    <identifier usage="used" kind="field" index="1"> y </identifier>
                   </term>
                   <symbol> + </symbol>
                   <term>
-                    <identifier usage="used" kind="FIELD" index="3"> height </identifier>
+                    <identifier usage="used" kind="field" index="3"> height </identifier>
                   </term>
                 </expression>
               </expressionList>
