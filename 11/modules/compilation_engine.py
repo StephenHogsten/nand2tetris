@@ -97,7 +97,6 @@ class CompilationEngine:
             self.indent_level += 1
         self.xml_file.write(line)
         self.xml_file.write('\n')
-        print(line)
 
 
     def compile_class(self):
@@ -212,6 +211,16 @@ class CompilationEngine:
         self.output_line('subroutineDec', include_close=False)
         self.output_line(token_type.lower(), token)
 
+        # save off if it's a constructor
+        if token == 'constructor':
+            constructor = True
+        elif token == 'method':
+            constructor = False
+            method = True
+        else:
+            constructor = False
+            method = False
+
         # reset subroutine indexes
         self.symbol_table.start_subroutine()
 
@@ -262,6 +271,17 @@ class CompilationEngine:
 
         # VM - write the function declaration (I'm not positive anything above matter outside of the symbol table)
         self.vm.write_function("%s.%s" % (self.class_name, vm_function), self.symbol_table.var_count('var'))
+
+        if constructor:
+            # VM - if it's a constructor, use OS to allocate space, and store to 'this'
+            self.vm.write_push('constant', self.symbol_table.var_count('field'))
+            print('using constructor with %i fields' % self.symbol_table.var_count('field'))
+            self.vm.write_call('Memory.alloc', 1)
+            self.vm.write_pop('pointer', 0)
+        elif method:
+            # VM - if it's a method, set this to the first argument immediately
+            self.vm.write_push('arg', 0)
+            self.vm.write_pop('pointer', 0)
 
         # statements
         if not self.compile_statements():
@@ -425,6 +445,7 @@ class CompilationEngine:
         [token_type, token, error] = self.check_current_token(['IDENTIFIER'])
         if error:
             return False
+        var_name = token
         var_kind = self.symbol_table.kind_of(token)
         var_index = self.symbol_table.index_of(token)
         self.output_line(token_type.lower(), token, kind=var_kind, usage='used', index=var_index)
@@ -435,13 +456,20 @@ class CompilationEngine:
             self.output_line(token_type.lower(), token)
 
             # expression
-            if not self.compile_expression():
+            if not self.compile_expression(expression_statements=expression_statements):
                 return False
 
             [token_type, token, error] = self.check_current_token(['SYMBOL'], [']'])
             if error:
                 return False
             self.output_line(token_type.lower(), token)
+
+            # for VM - we need to know later if we pushed the result from an expression as an array entry
+            #   we can't set the address for 'that' because 'that' could be needed for the expressions on either side
+            setting_array_entry = True
+            
+        else:
+            setting_array_entry = False
 
         # =
         [token_type, token, error] = self.check_current_token(['SYMBOL'], ['='])
@@ -460,15 +488,17 @@ class CompilationEngine:
         self.output_line(token_type.lower(), token)
 
         # VM - set the variable
-        if var_kind == 'field':
-            # set this (pointer) to the object, then get the appropriate index for the field
-            self.vm.write_push('arg', 0)
-            self.vm.write_pop('pointer', 0)
-            # what's on top is what we want to put in the field variable
-            self.vm.write_pop('this', var_index)
-        elif var_kind == 'var':
-            self.vm.write_pop('local', var_index)
+        print("--- let statement for %s  / %s ----" % (var_name, var_kind))
+        if setting_array_entry:
+            print(' NOTE: we ARE setting an array entry')
+            self.vm.write_pop('temp', 0)        # save off the value while we set-up 'that'
+            self.vm.write_push(var_kind, var_index)
+            self.vm.write_arithmetic('add')     # add the variables value (array base) to the next value (should  be which index)
+            self.vm.write_pop('pointer', 1)     # set this value as the address for 'that'
+            self.vm.write_push('temp', 0)       # put the value back on top
+            self.vm.write_pop('that', 0)        # put the value into the array's index
         else:
+            # just set the variable the normal way
             self.vm.write_pop(var_kind, var_index)
 
         # finish up
@@ -623,8 +653,7 @@ class CompilationEngine:
         
     def compile_do(self):
         """do statement is 
-        'do' subroutinecall ';' 
-        """
+        'do' subroutinecall ';' """
 
         # do
         [token_type, token, error] = self.check_current_token(['KEYWORD'], ['do'])
@@ -642,6 +671,9 @@ class CompilationEngine:
         if error:
             return False
         self.output_line(token_type.lower(), token)
+
+        # throwaway the returned value
+        self.vm.write_pop('temp', 0)
 
         # finish
         self.output_line('doStatement', include_open=False)
@@ -706,14 +738,17 @@ class CompilationEngine:
             
             #VM - check whether it's a method call by whether the function is contained in a class or an object
             object_name = first_token[1]
+            object_type = self.symbol_table.type_of(object_name)
             kind = self.symbol_table.kind_of(object_name)
+            print('we\'re looking for %s %s %s' % (object_name, object_type, kind))
             if kind is None:
                 # we're calling a class function - don't need to push 'this'
                 n_args = [0]
                 function_name = "%s.%s" % (object_name, token)
+                print(' and we didn\'t find it')
             else:
+                print(' and we DID find it')
                 idx = self.symbol_table.index_of(object_name)
-                function_name = "%s.%s" % (kind, token)
                 if kind == 'static':
                     self.vm.write_push('static', idx)
                 elif kind == 'field':
@@ -722,6 +757,7 @@ class CompilationEngine:
                     self.vm.write_push('arg', idx)
                 elif kind == 'var':
                     self.vm.write_push('local', idx)
+                function_name = "%s.%s" % (object_type, token)      # either way we use the class of the object
                 n_args = [1]
 
             [token_type, token, error] = self.check_current_token(['SYMBOL'], ['('])
@@ -730,14 +766,15 @@ class CompilationEngine:
             self.output_line(token_type.lower(), token)
         else:
             # we have functionName(
-            # no xxx. means that it's a method on the current object (instance method) 
+            # no xxx. means that it's a method on the current object (instance method)
+            # the function will be named with the current class
             first_token += [True, True, 'subroutine', 'used']
             self.output_line(*first_token)
             self.output_line(*second_token)
             # VM - push this onto the stack
             self.vm.write_push('pointer', 0)
             # set the function name to just the first token
-            function_name = first_token[1]
+            function_name = "%s.%s" % (self.class_name, first_token[1])
             n_args = [1]
 
         # expressionList
@@ -757,7 +794,7 @@ class CompilationEngine:
         return True
         
 
-    def compile_expression(self, allow_zero=False):
+    def compile_expression(self, allow_zero=False, expression_statements=None):
         """expression is 
         term (op term)*
         where op is one of: + - * / & | < > = """
@@ -826,6 +863,8 @@ class CompilationEngine:
             if token == 'true':
                 self.vm.write_push('const', 1)     # true - 111...
                 self.vm.write_arithmetic('neg')
+            elif token == 'this':
+                self.vm.write_push('pointer', 0)
             else:
                 self.vm.write_push('const', 0)  # null or false - 000...
         elif token_type == 'IDENTIFIER':
@@ -860,8 +899,6 @@ class CompilationEngine:
             if error:
                 # just a varname, just push to stack. var_kind and var_index **should've** been set above
                 if var_kind == 'field':
-                    self.vm.write_push('local', 0)      # push 'this' address
-                    self.vm.write_pop('pointer', 0)     # set pointer so 'this' is our 'this'
                     self.vm.write_push('this', var_index)   # access the index this variable is located as
                 elif var_kind == 'var':
                     self.vm.write_push('local', var_index)

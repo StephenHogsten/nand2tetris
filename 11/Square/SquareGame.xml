@@ -5,13 +5,13 @@
   <classVarDec>
     <keyword> field </keyword>
     <identifier usage="used" kind="class"> Square </identifier>
-    <identifier usage="declared" kind="FIELD" index="0"> square </identifier>
+    <identifier usage="declared" kind="FIELD" index="1"> square </identifier>
     <symbol> ; </symbol>
   </classVarDec>
   <classVarDec>
     <keyword> field </keyword>
     <keyword> int </keyword>
-    <identifier usage="declared" kind="FIELD" index="1"> direction </identifier>
+    <identifier usage="declared" kind="FIELD" index="2"> direction </identifier>
     <symbol> ; </symbol>
   </classVarDec>
   <subroutineDec>
@@ -27,13 +27,15 @@
       <statements>
         <letStatement>
           <keyword> let </keyword>
-          <identifier usage="used" kind="FIELD" index="0"> square </identifier>
+          <identifier usage="used" kind="field" index="0"> square </identifier>
           <symbol> = </symbol>
           <expression>
             <term>
               <identifier usage="used"> Square </identifier>
               <symbol> . </symbol>
-              <identifier usage="used"> new </identifier>
+              <identifier usage="used" kind="class"> Square </identifier>
+              <symbol> . </symbol>
+              <identifier usage="used" kind="subroutine"> new </identifier>
               <symbol> ( </symbol>
               <expressionList>
                 <expression>
@@ -61,7 +63,7 @@
         </letStatement>
         <letStatement>
           <keyword> let </keyword>
-          <identifier usage="used" kind="FIELD" index="1"> direction </identifier>
+          <identifier usage="used" kind="field" index="1"> direction </identifier>
           <symbol> = </symbol>
           <expression>
             <term>
@@ -74,7 +76,6 @@
           <keyword> return </keyword>
           <expression>
             <term>
-              <keyword> this </keyword>
             </term>
           </expression>
           <symbol> ; </symbol>
@@ -114,7 +115,6 @@
           <expressionList>
             <expression>
               <term>
-                <keyword> this </keyword>
               </term>
             </expression>
           </expressionList>
@@ -145,7 +145,7 @@
           <symbol> ( </symbol>
           <expression>
             <term>
-              <identifier usage="used" kind="FIELD" index="1"> direction </identifier>
+              <identifier usage="used" kind="field" index="1"> direction </identifier>
             </term>
             <symbol> = </symbol>
             <term>
@@ -174,7 +174,7 @@
           <symbol> ( </symbol>
           <expression>
             <term>
-              <identifier usage="used" kind="FIELD" index="1"> direction </identifier>
+              <identifier usage="used" kind="field" index="1"> direction </identifier>
             </term>
             <symbol> = </symbol>
             <term>
@@ -203,7 +203,7 @@
           <symbol> ( </symbol>
           <expression>
             <term>
-              <identifier usage="used" kind="FIELD" index="1"> direction </identifier>
+              <identifier usage="used" kind="field" index="1"> direction </identifier>
             </term>
             <symbol> = </symbol>
             <term>
@@ -232,7 +232,7 @@
           <symbol> ( </symbol>
           <expression>
             <term>
-              <identifier usage="used" kind="FIELD" index="1"> direction </identifier>
+              <identifier usage="used" kind="field" index="1"> direction </identifier>
             </term>
             <symbol> = </symbol>
             <term>
@@ -293,23 +293,22 @@
       <varDec>
         <keyword> var </keyword>
         <keyword> char </keyword>
-        <identifier usage="declared" kind="ARG" index="0"> key </identifier>
+        <identifier usage="declared" kind="ARG" index="1"> key </identifier>
         <symbol> ; </symbol>
       </varDec>
       <varDec>
         <keyword> var </keyword>
         <keyword> boolean </keyword>
-        <identifier usage="declared" kind="ARG" index="1"> exit </identifier>
+        <identifier usage="declared" kind="ARG" index="2"> exit </identifier>
         <symbol> ; </symbol>
       </varDec>
       <statements>
         <letStatement>
           <keyword> let </keyword>
-          <identifier usage="used" kind="VAR" index="1"> exit </identifier>
+          <identifier usage="used" kind="var" index="1"> exit </identifier>
           <symbol> = </symbol>
           <expression>
             <term>
-              <keyword> false </keyword>
             </term>
           </expression>
           <symbol> ; </symbol>
@@ -321,7 +320,7 @@
             <term>
               <symbol> ~ </symbol>
               <term>
-                <identifier usage="used" kind="VAR" index="1"> exit </identifier>
+                <identifier usage="used" kind="var" index="1"> exit </identifier>
               </term>
             </term>
           </expression>
@@ -333,7 +332,7 @@
               <symbol> ( </symbol>
               <expression>
                 <term>
-                  <identifier usage="used" kind="VAR" index="0"> key </identifier>
+                  <identifier usage="used" kind="var" index="0"> key </identifier>
                 </term>
                 <symbol> = </symbol>
                 <term>
@@ -345,13 +344,15 @@
               <statements>
                 <letStatement>
                   <keyword> let </keyword>
-                  <identifier usage="used" kind="VAR" index="0"> key </identifier>
+                  <identifier usage="used" kind="var" index="0"> key </identifier>
                   <symbol> = </symbol>
                   <expression>
                     <term>
                       <identifier usage="used"> Keyboard </identifier>
                       <symbol> . </symbol>
-                      <identifier usage="used"> keyPressed </identifier>
+                      <identifier usage="used" kind="class"> Keyboard </identifier>
+                      <symbol> . </symbol>
+                      <identifier usage="used" kind="subroutine"> keyPressed </identifier>
                       <symbol> ( </symbol>
                       <expressionList>
                       </expressionList>
@@ -377,7 +378,7 @@
               <symbol> ( </symbol>
               <expression>
                 <term>
-                  <identifier usage="used" kind="VAR" index="0"> key </identifier>
+                  <identifier usage="used" kind="var" index="0"> key </identifier>
                 </term>
                 <symbol> = </symbol>
                 <term>
@@ -389,11 +390,10 @@
               <statements>
                 <letStatement>
                   <keyword> let </keyword>
-                  <identifier usage="used" kind="VAR" index="1"> exit </identifier>
+                  <identifier usage="used" kind="var" index="1"> exit </identifier>
                   <symbol> = </symbol>
                   <expression>
                     <term>
-                      <keyword> true </keyword>
                     </term>
                   </expression>
                   <symbol> ; </symbol>
@@ -406,7 +406,7 @@
               <symbol> ( </symbol>
               <expression>
                 <term>
-                  <identifier usage="used" kind="VAR" index="0"> key </identifier>
+                  <identifier usage="used" kind="var" index="0"> key </identifier>
                 </term>
                 <symbol> = </symbol>
                 <term>
@@ -435,7 +435,7 @@
               <symbol> ( </symbol>
               <expression>
                 <term>
-                  <identifier usage="used" kind="VAR" index="0"> key </identifier>
+                  <identifier usage="used" kind="var" index="0"> key </identifier>
                 </term>
                 <symbol> = </symbol>
                 <term>
@@ -464,7 +464,7 @@
               <symbol> ( </symbol>
               <expression>
                 <term>
-                  <identifier usage="used" kind="VAR" index="0"> key </identifier>
+                  <identifier usage="used" kind="var" index="0"> key </identifier>
                 </term>
                 <symbol> = </symbol>
                 <term>
@@ -476,7 +476,7 @@
               <statements>
                 <letStatement>
                   <keyword> let </keyword>
-                  <identifier usage="used" kind="FIELD" index="1"> direction </identifier>
+                  <identifier usage="used" kind="field" index="1"> direction </identifier>
                   <symbol> = </symbol>
                   <expression>
                     <term>
@@ -493,7 +493,7 @@
               <symbol> ( </symbol>
               <expression>
                 <term>
-                  <identifier usage="used" kind="VAR" index="0"> key </identifier>
+                  <identifier usage="used" kind="var" index="0"> key </identifier>
                 </term>
                 <symbol> = </symbol>
                 <term>
@@ -505,7 +505,7 @@
               <statements>
                 <letStatement>
                   <keyword> let </keyword>
-                  <identifier usage="used" kind="FIELD" index="1"> direction </identifier>
+                  <identifier usage="used" kind="field" index="1"> direction </identifier>
                   <symbol> = </symbol>
                   <expression>
                     <term>
@@ -522,7 +522,7 @@
               <symbol> ( </symbol>
               <expression>
                 <term>
-                  <identifier usage="used" kind="VAR" index="0"> key </identifier>
+                  <identifier usage="used" kind="var" index="0"> key </identifier>
                 </term>
                 <symbol> = </symbol>
                 <term>
@@ -534,7 +534,7 @@
               <statements>
                 <letStatement>
                   <keyword> let </keyword>
-                  <identifier usage="used" kind="FIELD" index="1"> direction </identifier>
+                  <identifier usage="used" kind="field" index="1"> direction </identifier>
                   <symbol> = </symbol>
                   <expression>
                     <term>
@@ -551,7 +551,7 @@
               <symbol> ( </symbol>
               <expression>
                 <term>
-                  <identifier usage="used" kind="VAR" index="0"> key </identifier>
+                  <identifier usage="used" kind="var" index="0"> key </identifier>
                 </term>
                 <symbol> = </symbol>
                 <term>
@@ -563,7 +563,7 @@
               <statements>
                 <letStatement>
                   <keyword> let </keyword>
-                  <identifier usage="used" kind="FIELD" index="1"> direction </identifier>
+                  <identifier usage="used" kind="field" index="1"> direction </identifier>
                   <symbol> = </symbol>
                   <expression>
                     <term>
@@ -585,7 +585,7 @@
                     <symbol> ( </symbol>
                     <expression>
                       <term>
-                        <identifier usage="used" kind="VAR" index="0"> key </identifier>
+                        <identifier usage="used" kind="var" index="0"> key </identifier>
                       </term>
                       <symbol> = </symbol>
                       <term>
@@ -601,13 +601,15 @@
               <statements>
                 <letStatement>
                   <keyword> let </keyword>
-                  <identifier usage="used" kind="VAR" index="0"> key </identifier>
+                  <identifier usage="used" kind="var" index="0"> key </identifier>
                   <symbol> = </symbol>
                   <expression>
                     <term>
                       <identifier usage="used"> Keyboard </identifier>
                       <symbol> . </symbol>
-                      <identifier usage="used"> keyPressed </identifier>
+                      <identifier usage="used" kind="class"> Keyboard </identifier>
+                      <symbol> . </symbol>
+                      <identifier usage="used" kind="subroutine"> keyPressed </identifier>
                       <symbol> ( </symbol>
                       <expressionList>
                       </expressionList>

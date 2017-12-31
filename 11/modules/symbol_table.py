@@ -13,6 +13,9 @@ class SymbolTableEntry:
         self.kind = entry_kind
         self.index = entry_index
 
+    def __repr__(self):
+        return str({'type': self.type, 'kind': self.kind, 'index': self.index})
+
 class SymbolTable:
     """generates symbol tables"""
 
@@ -25,6 +28,13 @@ class SymbolTable:
             'arg': 0,
             'var': 0
         }
+
+    def __repr__(self):
+        return str({
+            'subroutine_hash': self.subroutine_hash,
+            'class_hash': self.class_hash,
+            'indexes': self.indexes
+        })
 
     def start_subroutine(self):
         self.subroutine_hash = {}
@@ -44,8 +54,6 @@ class SymbolTable:
             self.class_hash[name] = new_entry
 
     def var_count(self, kind):
-        print(kind)
-        print(self.indexes)
         kind = kind.lower()
         if kind not in self.indexes:
             print('kind %s not found in indexes' % kind)
@@ -53,6 +61,7 @@ class SymbolTable:
         return self.indexes[kind]
 
     def kind_of(self, var_name):
+        """what kind of scope (e.g. arg, var)"""
         if var_name in self.subroutine_hash:
             return self.subroutine_hash[var_name].kind
         elif var_name in self.class_hash:
@@ -61,6 +70,7 @@ class SymbolTable:
             return None
 
     def type_of(self, var_name):
+        """what type of variable (e.g. string, int)"""
         if var_name in self.subroutine_hash:
             return self.subroutine_hash[var_name].type
         elif var_name in self.class_hash:
