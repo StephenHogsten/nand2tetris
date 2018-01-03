@@ -9,26 +9,86 @@
  * consists of 32,768 words, each holding a 16-bit binary number.
  */ 
 class Memory {
+    field Array memory;
+    field Array freeList;
+    field Integer freeListLength;
+
 
     /** Initializes the class. */
-    function void init() {
+    function void init() { 
+        // set the base of the memory "array" to 0, then we can 
+        let memory = 0;
+        // the heap is allocatable. Heap is 2048 - 16383
+        let freeList = 2048;
+        let freeListLength = 1;
+        let freeList[0] = 14336;       // the length of this segment (16383 - 2048 - 1)
     }
 
     /** Returns the RAM value at the given address. */
     function int peek(int address) {
+        return memory[address];
     }
 
     /** Sets the RAM value at the given address to the given value. */
     function void poke(int address, int value) {
+        let memory[address] = value;
     }
 
     /** Finds an available RAM block of the given size and returns
      *  a reference to its base address. */
     function int alloc(int size) {
+        var int blocksLeft;
+        var int currentList;
+        var int currentSize;
+        var int nextList;
+        var int lastList;
+
+        let lastList = 0;
+        let currentList = freeList;
+        let blocksLeft = freeListLength;
+        while (blocksLeft > 0) {
+            let currentSize = Memory.peek(currentList);
+            // pick the first list that is big enough
+            if (currentSize > size) {
+                // this list has enough room
+                if (currentSize > (size + 3)) {
+                    // this list is big enough to repartition
+                    let nextList = currentList + size + 1;
+                    // set the size of the new partition
+                    do Memory.poke(nextList, currentSize - size - 1);     
+                    // set next for the new partition
+                    do Memory.poke(nextList + 1, Memory.peek(currentList + 1));
+                } else {
+                    // we're not splitting - we'll have one less free list
+                    let nextList = Memory.peek(currentList + 1);
+                    let freeListLength = freeListLength - 1;
+                }
+
+                if (~ lastList = 0) {
+                    // if this isn't the first list, point the previous list to the new one
+                    do Memory.poke(lastList +1, nextList);
+                } else {
+                    // if this is the first list, point the freeList field to the new one
+                    let freeList = newList;   
+                }
+
+                return currentList;
+            } else {
+                // this list is not big enough to use, move on to the next
+                let lastList = currentList;
+                currentList = Memory.peek(currentList + 1);
+                blocksLeft = blocksLeft - 1;
+            }
+        }
+        return 0;   // theoretically this should never happen - we couldn't allocate space
     }
+
+    function boolean 
 
     /** De-allocates the given object (cast as an array) by making
      *  it available for future allocations. */
     function void deAlloc(Array o) {
+        var int allocSize;
+
     }    
 }
