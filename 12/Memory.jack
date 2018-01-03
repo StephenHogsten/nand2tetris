@@ -72,23 +72,32 @@ class Memory {
                     let freeList = newList;   
                 }
 
-                return currentList;
+                // set-up this block: set the one before it to the size, and return the address
+                do Memory.poke(currentList, size - 1);
+                return currentList + 1;
             } else {
                 // this list is not big enough to use, move on to the next
                 let lastList = currentList;
-                currentList = Memory.peek(currentList + 1);
-                blocksLeft = blocksLeft - 1;
+                let currentList = Memory.peek(currentList + 1);
+                let blocksLeft = blocksLeft - 1;
             }
         }
         return 0;   // theoretically this should never happen - we couldn't allocate space
     }
-
-    function boolean 
 
     /** De-allocates the given object (cast as an array) by making
      *  it available for future allocations. */
     function void deAlloc(Array o) {
         var int allocSize;
 
+        let allocSize = Memory.peek(o - 1);
+        // free size is one bigger than the old size
+        do Memory.poke(o - 1, allocSize + 1);   
+        // the new block will point to the block that was previously first
+        do Memory.poke(o, freeList);
+        // the new block will be the new first block
+        let freeList = o - 1;
+        // we just added a block
+        let freeListLength = freeListLength + 1;
     }    
 }
