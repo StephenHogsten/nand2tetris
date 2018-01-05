@@ -9,19 +9,21 @@
  * consists of 32,768 words, each holding a 16-bit binary number.
  */ 
 class Memory {
-    field Array memory;
-    field Array freeList;
-    field Integer freeListLength;
+    static Array memory;
+    static Array freeList;
+    static Integer freeListLength;
 
 
     /** Initializes the class. */
     function void init() { 
+        
         // set the base of the memory "array" to 0, then we can 
         let memory = 0;
         // the heap is allocatable. Heap is 2048 - 16383
         let freeList = 2048;
         let freeListLength = 1;
         let freeList[0] = 14336;       // the length of this segment (16383 - 2048 - 1)
+        return;
     }
 
     /** Returns the RAM value at the given address. */
@@ -32,6 +34,7 @@ class Memory {
     /** Sets the RAM value at the given address to the given value. */
     function void poke(int address, int value) {
         let memory[address] = value;
+        return;
     }
 
     /** Finds an available RAM block of the given size and returns
@@ -51,8 +54,9 @@ class Memory {
             // pick the first list that is big enough
             if (currentSize > size) {
                 // this list has enough room
-                if (currentSize > (size + 3)) {
-                    // this list is big enough to repartition
+
+                if (currentSize > (size + 2)) {
+                    // this list is big enough to repartition 
                     let nextList = currentList + size + 1;
                     // set the size of the new partition
                     do Memory.poke(nextList, currentSize - size - 1);     
@@ -69,11 +73,11 @@ class Memory {
                     do Memory.poke(lastList +1, nextList);
                 } else {
                     // if this is the first list, point the freeList field to the new one
-                    let freeList = newList;   
+                    let freeList = nextList;   
                 }
 
                 // set-up this block: set the one before it to the size, and return the address
-                do Memory.poke(currentList, size - 1);
+                do Memory.poke(currentList, size);
                 return currentList + 1;
             } else {
                 // this list is not big enough to use, move on to the next
@@ -99,5 +103,6 @@ class Memory {
         let freeList = o - 1;
         // we just added a block
         let freeListLength = freeListLength + 1;
+        return;
     }    
 }
