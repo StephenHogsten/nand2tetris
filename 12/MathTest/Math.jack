@@ -22,14 +22,16 @@ class Math {
         // initialize 'twoToThe' with the value for each power of two
         while (twoIndex < 16) {
             let twoToThe[twoIndex] = twoPower;
-            twoPower = twoPower + twoPower;
-            twoIndex = twoIndex + 1;
+            let twoPower = twoPower + twoPower;
+            let twoIndex = twoIndex + 1;
         }
+
+        return;
     }
 
     /** Returns the absolute value of x. */
     function int abs(int x) {
-        if x < 0 {
+        if (x < 0) {
             return 0 - x;
         } else {
             return x;
@@ -61,15 +63,15 @@ class Math {
         let Y = Math.int2bitwise(y);
         let sum = 0;
         let i = 0;
-        let shiftedX = x
+        let shiftedX = x;
 
         // for each bit of y, add the apporpriately shifted value of x to the sum
         while (i < 16) {
             if (Y[i] = 1) {
-                sum = sum + shiftedX;
+                let sum = sum + shiftedX;
             }
-            i = i + 1;                          //increment the bit
-            shiftedX = shiftedX + shiftedX;     //left-shift the total
+            let i = i + 1;                          //increment the bit
+            let shiftedX = shiftedX + shiftedX;     //left-shift the total
         }        
 
         // flip through addition
@@ -106,10 +108,12 @@ class Math {
      *  the Jack expressions x/y and divide(x,y) return the same value.
      */
     function int divide(int x, int y) {
+        return 0;
     }
 
     /** Returns the integer part of the square root of x. */
     function int sqrt(int x) {
+        return 0;
     }
 
     /** Returns the greater number. */
