@@ -1,0 +1,132 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Math.jack
+
+/**
+ * A library of commonly used mathematical functions.
+ * Note: Jack compilers implement multiplication and division using OS method calls.
+ */
+class Math {
+    static Array twoToThe;
+
+    /** Initializes the library. */
+    function void init() {
+        var int twoPower;
+        var int twoIndex;
+
+        let twoPower = 1;
+        let twoIndex = 0;
+        let twoToThe = Array.new(16);
+
+        // initialize 'twoToThe' with the value for each power of two
+        while (twoIndex < 16) {
+            let twoToThe[twoIndex] = twoPower;
+            twoPower = twoPower + twoPower;
+            twoIndex = twoIndex + 1;
+        }
+    }
+
+    /** Returns the absolute value of x. */
+    function int abs(int x) {
+        if x < 0 {
+            return 0 - x;
+        } else {
+            return x;
+        }
+    }
+
+    /** Returns the product of x and y. 
+     *  When a Jack compiler detects the multiplication operator '*' in the 
+     *  program's code, it handles it by invoking this method. In other words,
+     *  the Jack expressions x*y and multiply(x,y) return the same value.
+     */
+    function int multiply(int x, int y) {
+        var int sum;
+        var int shiftedX;
+        var int n;      // most significant big of x
+        var int i;      // bit placehoder for x
+        var Array Y;    // bit representation for Y
+        var boolean flip;   // whether we'll need to flip the sign of the abs 
+
+        if (x < 0) {
+            let flip = true;
+        } else {
+            let flip = false;
+        }
+        if (y < 0) {
+            let flip = ~flip;
+        }
+
+        let Y = Math.int2bitwise(y);
+        let sum = 0;
+        let i = 0;
+        let shiftedX = x
+
+        // for each bit of y, add the apporpriately shifted value of x to the sum
+        while (i < 16) {
+            if (Y[i] = 1) {
+                sum = sum + shiftedX;
+            }
+            i = i + 1;                          //increment the bit
+            shiftedX = shiftedX + shiftedX;     //left-shift the total
+        }        
+
+        // flip through addition
+        if (flip) {
+            return sum - sum - sum;
+        } else {
+            return sum;
+        }
+    }
+
+    function Array int2bitwise(int x) {
+        var int i;      // bit placeholder
+        var int X;      // Array
+        
+        let X = Array.new(16);
+        let i = 15;
+        while (i > -1) {
+            if (twoToThe[i] > x) {
+                // this power of two is too big - this bit should be false
+                let X[i] = 0;
+            } else {
+                // this bit should be true
+                let X[i] = 0;
+                // shrink x
+                let x = x - twoToThe[i];
+            }
+        }
+        return X;
+    }
+
+    /** Returns the integer part of x/y.
+     *  When a Jack compiler detects the multiplication operator '/' in the 
+     *  program's code, it handles it by invoking this method. In other words,
+     *  the Jack expressions x/y and divide(x,y) return the same value.
+     */
+    function int divide(int x, int y) {
+    }
+
+    /** Returns the integer part of the square root of x. */
+    function int sqrt(int x) {
+    }
+
+    /** Returns the greater number. */
+    function int max(int a, int b) {
+        if (b > a) {
+            return b;
+        } else {
+            return a;
+        }
+    }
+
+    /** Returns the smaller number. */
+    function int min(int a, int b) {
+        if (b < a) {
+            return b;
+        } else {
+            return a;
+        }
+    }
+}
