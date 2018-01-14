@@ -134,12 +134,6 @@ class Math {
             return 0;
         }
 
-        // q = divide(x, 2*y);
-        // if (x - 2 * q * y > y) {
-        //    return 2 * q + 1;
-        // } else {
-        //    return 2 * q;
-        // }
         let twoQY = Array.new(1);
         let twoQY[0] = 0;
 
@@ -175,7 +169,27 @@ class Math {
 
     /** Returns the integer part of the square root of x. */
     function int sqrt(int x) {
-        return 0;
+        var int j;
+        var int y;
+        var int y2j;
+        var int y2j_sq;
+
+        if (~(x > 0)) {
+            return 0;
+        }
+
+        let y = 0;
+        let j = 7;      // n / 2 - 1
+        while (~ (j < 0)) {
+            let y2j = y + twoToThe[j];
+            let y2j_sq = y2j * y2j;
+            if ((y2j_sq > 0) & ~(y2j_sq > x)) {
+                let y = y2j;
+            }
+            let j = j - 1;
+        }
+
+        return y;
     }
 
     /** Returns the greater number. */
