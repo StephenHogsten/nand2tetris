@@ -53,17 +53,19 @@ class Math {
 
         if (x < 0) {
             let flip = true;
+            let x = 0 - x;
         } else {
             let flip = false;
         }
         if (y < 0) {
             let flip = ~flip;
+            let y = 0 - y;
         }
 
-        let Y = Math.int2bitwise(Math.abs(y));
+        let Y = Math.int2bitwise(y);
         let sum = 0;
         let i = 0;
-        let shiftedX = Math.abs(x);
+        let shiftedX = x;
 
         // for each bit of y, add the apporpriately shifted value of x to the sum
         while (i < 15) {
@@ -78,7 +80,7 @@ class Math {
 
         // flip through addition
         if (flip) {
-            return sum - sum - sum;
+            return 0 - sum;
         } else {
             return sum;
         }
@@ -113,7 +115,62 @@ class Math {
      *  the Jack expressions x/y and divide(x,y) return the same value.
      */
     function int divide(int x, int y) {
-        return 0;
+        var boolean flip;
+        var int quotient;
+        var Array twoQY;
+
+        if (x < 0) {
+            let flip = true;
+            let x = 0 - x;
+        } else {
+            let flip = false;
+        }
+        if (y < 0) {
+            let flip = ~flip;
+            let y = 0 - y;
+        }
+
+        if (y > x) {
+            return 0;
+        }
+
+        // q = divide(x, 2*y);
+        // if (x - 2 * q * y > y) {
+        //    return 2 * q + 1;
+        // } else {
+        //    return 2 * q;
+        // }
+        let twoQY = Array.new(1);
+        let twoQY[0] = 0;
+
+        let quotient = Math.divideRec(x, y, twoQY);
+
+        do twoQY.dispose();
+
+        if (flip) {
+            return 0 - quotient;
+        } else {
+            return quotient;
+        }
+    }
+
+    function int divideRec(int x, int y, Array twoQY) {
+        var int q;
+
+        if (y > x) {
+            return 0;
+        }
+        if (y < 0) {
+            return 0;
+        }
+
+        let q = Math.divideRec(x, 2*y, twoQY);
+        if (x - twoQY[0] < y) {
+            return 2 * q;
+        } else {
+            let twoQY[0] = twoQY[0] + y;
+            return 2 * q + 1;
+        }
     }
 
     /** Returns the integer part of the square root of x. */
