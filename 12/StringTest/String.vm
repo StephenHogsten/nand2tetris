@@ -136,11 +136,83 @@ sub
 pop this 1
 push constant 0
 return
-function String.intValue 0
+function String.intValue 4
 push argument 0
 pop pointer 0
-push constant 666
+push pointer 0
+push constant 0
+call String.charAt 2
+push constant 45
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+not
+pop local 2
+push constant 1
+pop local 1
+goto IF_END0
+label IF_FALSE0
+push constant 0
+pop local 2
+push constant 0
+pop local 1
+label IF_END0
+label WHILE_EXP0
+push local 1
+push this 1
+lt
+not
+if-goto WHILE_END0
+push local 1
+push this 2
+add
+pop pointer 1
+push that 0
+push constant 48
+sub
+pop local 3
+push local 3
+push constant 9
+gt
+push local 3
+or
+push constant 0
+lt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push this 1
+pop local 1
+goto IF_END1
+label IF_FALSE1
+push constant 10
+push local 0
+call Math.multiply 2
+push local 3
+add
+pop local 0
+push local 1
+push constant 1
+add
+pop local 1
+label IF_END1
+goto WHILE_EXP0
+label WHILE_END0
+push local 2
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push constant 0
+push local 0
+sub
 return
+goto IF_END2
+label IF_FALSE2
+push local 0
+return
+label IF_END2
 function String.setInt 0
 push argument 0
 pop pointer 0

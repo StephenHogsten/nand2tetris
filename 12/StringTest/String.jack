@@ -67,7 +67,35 @@ class String {
     /** Returns the integer value of this string, 
      *  until a non-digit character is detected. */
     method int intValue() {
-        return 666;
+        var int val;
+        var int i;
+        var boolean flip;
+        var int digit;
+
+        // TODO - stop when seeing a non-digit
+        if (charAt(0) = 45) {
+            let flip = true;
+            let i = 1;
+        } else {
+            let flip = false;
+            let i = 0;
+        }
+
+        while (i < stringLength) {
+            let digit = stringArray[i] - 48;
+            if (digit > 9 | digit < 0) {
+                let i = stringLength;
+            } else {
+                let val = 10 * val  + digit;
+                let i = i + 1;
+            }
+        }
+
+        if (flip) {
+            return 0 - val;
+        } else {
+            return val;
+        }
     }
 
     /** Sets this string to hold a representation of the given value. */
