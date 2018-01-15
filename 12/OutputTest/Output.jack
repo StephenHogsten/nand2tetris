@@ -18,15 +18,38 @@ class Output {
 
     // Character map for displaying characters
     static Array charMaps; 
+    static int row;
+    static int column;
+    static Array masks;
 
     /** Initializes the screen, and locates the cursor at the screen's top-left. */
     function void init() {
+        var int m;
+        var int i;
+
+        do Output.initMap();
+        let row = 0;       // 0 <= row <= 22
+        let column = 0;    // 0 <= column <= 63
+
+        // set-up masks for bit checking
+        let masks = Array.new(8);
+        let i = 0;
+        let m = 1;
+        while (i < 8) {
+            let masks[i] = m;
+            let m = m + m;
+            let i = i + 1;
+        }
+
+        return;
     }
 
     // Initializes the character map array
     function void initMap() {
         var int i;
     
+        // *SSH this is an array (127 is the highest ascii we respect) where each entry
+        //      is a bitmap at the index of its ascii
         let charMaps = Array.new(127);
         
         // Black square, used for displaying non-printable characters.
@@ -71,7 +94,9 @@ class Output {
         do Output.create(64,30,51,51,59,59,59,27,3,30,0,0);  // @
         do Output.create(63,30,51,51,24,12,12,0,12,12,0,0);  // ?
 
-        do Output.create(65,0,0,0,0,0,0,0,0,0,0,0);          // A ** TO BE FILLED **
+        // MINE
+        do Output.create(65,12,30,51,51,63,51,51,51,51,0,0); // A 
+
         do Output.create(66,31,51,51,51,31,51,51,51,31,0,0); // B
         do Output.create(67,28,54,35,3,3,3,35,54,28,0,0);    // C
         do Output.create(68,15,27,51,51,51,51,51,27,15,0,0); // D
@@ -137,15 +162,16 @@ class Output {
         do Output.create(125,7,12,12,12,56,12,12,12,7,0,0);    // }
         do Output.create(126,38,45,25,0,0,0,0,0,0,0,0);        // ~
 
-	return;
+        return;
     }
 
     // Creates the character map array of the given character index, using the given values.
+    // *SSH - the letters are just placeholders for the 11 variables we need (1 for each row)
     function void create(int index, int a, int b, int c, int d, int e,
                          int f, int g, int h, int i, int j, int k) {
-	var Array map;
+        var Array map;
 
-	let map = Array.new(11);
+        let map = Array.new(11);
         let charMaps[index] = map;
 
         let map[0] = a;
@@ -176,28 +202,114 @@ class Output {
     /** Moves the cursor to the j-th column of the i-th row,
      *  and erases the character displayed there. */
     function void moveCursor(int i, int j) {
+        // set cursor
+        let row = i;
+        let column = j;
+
+        // blank out the grid location
+        do Output.drawChar(32);
+
+        return;
     }
 
     /** Displays the given character at the cursor location,
      *  and advances the cursor one column forward. */
     function void printChar(char c) {
+        do Output.drawChar(c);
+        do Output.advance();
+        return;
     }
 
     /** displays the given string starting at the cursor location,
      *  and advances the cursor appropriately. */
     function void printString(String s) {
+        var int i;
+        var int l;
+
+        let l = s.length();
+        let i = 0;
+        while (i < l) {
+            do Output.printChar(s.charAt(i));
+            let i = i + 1;
+        }
+        return;
     }
 
     /** Displays the given integer starting at the cursor location,
      *  and advances the cursor appropriately. */
     function void printInt(int i) {
+        var String s;
+        let s = String.new(8);
+        do s.setInt(i);
+        do Output.printString(s);
+        return;
     }
 
     /** Advances the cursor to the beginning of the next line. */
     function void println() {
+        let column = 0;
+        let row = row + 1;
+        return;
     }
 
     /** Moves the cursor one column back. */
     function void backSpace() {
+        if (column > 0) {
+            let column = column - 1;
+        }
+        return;
     }
+
+    // helpers
+    function void drawChar(char c) {
+        var int x;
+        var int y;
+        var int cursorRow;
+        var int cursorColumn;
+        var int bitMap;
+        var int bitRow;
+
+        let y = row * 11;
+        let x = column * 8;
+        let bitMap = charMaps[c];
+        let cursorRow = 0;
+        
+        while (cursorRow < 11) {
+            let cursorColumn = 0;
+            let bitRow = bitMap[cursorRow];
+            while (cursorColumn < 8) {
+                // set color for this bit
+                if (bitRow & masks[cursorColumn] = masks[cursorColumn]) {
+                    do Screen.setColor(true);
+                } else {
+                    do Screen.setColor(false);
+                }
+
+                // draw this pixel
+                do Screen.drawPixel(x + cursorColumn, y + cursorRow);
+
+                // increment column
+                let cursorColumn = cursorColumn + 1;
+            }
+            // increment row
+            let cursorRow = cursorRow + 1;
+        }
+        
+        return;
+    }
+
+    function void advance() {
+        if (column < 63) {
+            let column = column + 1;
+        } else {
+            let column = 0;
+            if (row < 22) {
+                let row = row + 1;
+            } else {
+                let row = 0;
+            }
+        }
+        return;
+    }
+
 }
