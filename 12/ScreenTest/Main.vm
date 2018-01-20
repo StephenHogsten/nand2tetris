@@ -1,4 +1,8 @@
 function Main.main 0
+push constant 20
+push constant 20
+call Screen.drawPixel 2
+pop temp 0
 push constant 0
 push constant 220
 push constant 511
