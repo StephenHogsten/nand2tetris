@@ -323,6 +323,48 @@ goto WHILE_EXP0
 label WHILE_END0
 push constant 0
 return
-function Screen.drawCircle 0
+function Screen.drawCircle 3
+push constant 0
+push argument 2
+sub
+pop local 0
+push argument 2
+push argument 2
+call Math.multiply 2
+pop local 1
+label WHILE_EXP0
+push local 0
+push argument 2
+gt
+not
+not
+if-goto WHILE_END0
+push local 1
+push local 0
+push local 0
+call Math.multiply 2
+sub
+call Math.sqrt 1
+pop local 2
+push argument 0
+push local 2
+sub
+push argument 1
+push local 0
+add
+push argument 0
+push local 2
+add
+push argument 1
+push local 0
+add
+call Screen.drawLine 4
+pop temp 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
 push constant 0
 return
