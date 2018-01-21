@@ -11,7 +11,7 @@
  */
 class Screen {
     static boolean color;
-    static Array twoPowersRev;
+    static Array twoPowers;
 
     /** Initializes the Screen. */
     function void init() {
@@ -22,9 +22,9 @@ class Screen {
 
         let counter = 1;
         let i = 0;
-        let twoPowersRev = Array.new(16);
+        let twoPowers = Array.new(16);
         while (i < 16) {
-            let twoPowersRev[i] = counter;
+            let twoPowers[i] = counter;
             let counter = counter + counter;
             let i = i + 1;
         }
@@ -58,7 +58,7 @@ class Screen {
         var int word;
         
         let which_word_col = x / 16;
-        let pixelMask = twoPowersRev[x - (16 * which_word_col)];
+        let pixelMask = twoPowers[x - (16 * which_word_col)];
         let word = 16384 + (32 * y) + which_word_col;
 
         if (color) {
@@ -152,22 +152,67 @@ class Screen {
     /** Draws a filled rectangle whose top left corner is (x1, y1)
      * and bottom right corner is (x2,y2), using the current color. */
     function void drawRectangle(int x1, int y1, int x2, int y2) {
-        var int x;
-        var int y;
+        var int x;                      //0
+        var int y;                      //1
+        var int firstWordColAddr;       //2
+        var int wordRowAddr;            //3
+        var int wordColAddr;            //4
+        var int lastWordRowAddr;        //5
+        var int word;                   //6
+        var int lastWordEnd;    // the of the last word (what we should subtract)
+        var int temp;                   //8
 
         // could improve this significantly by finding each word and modifying all at once 
         // (e.g. set to -1 instead of setting each bit in a loop)
 
+        let firstWordColAddr = 16384 + (32 * y1);
+        let lastWordRowAddr = x2 / 16;
+        let lastWordEnd = x2 - (lastWordRowAddr * 16);
+        let lastWordEnd = twoPowers[lastWordEnd];
+        let lastWordEnd = 0 - lastWordEnd - lastWordEnd;
         let x = x1;
         while (~(x > x2)) {
+            // calculate which word address for each row, and exactly what to add
+            do Screen.break();
+            let wordRowAddr = x / 16;   // which word in this row do we care about (0-31)
+            let word = x - (wordRowAddr * 16);      // this is just which bit
+            let x = x - word + 16;                  // incrementing x based on the word 
+            let word = twoPowers[word];     // now it's the bit in the right location
+            if (wordRowAddr < lastWordRowAddr) {
+                // fill from our column to the right (MSB)
+                let word = 0 - word;       // flipping the sign for a power of two just fills the MSB
+            } else {
+                // fill from our column to x2
+                let word = 0 - word - lastWordEnd;
+            }
+
+            // if color is false (0) flip so we can make it white
+            if (~color) {
+                let word = ~word;
+            }
+
             let y = y1;
+            let wordColAddr = firstWordColAddr;
             while (~(y > y2)) {
-                do Screen.drawPixel(x, y);
+                let temp = Memory.peek(wordColAddr + wordRowAddr);
+                if (color) {
+                    // make the box black
+                    let temp = temp | word;
+                } else {
+                    // make the box white
+                    let temp = temp & word;
+                }
+                do Memory.poke(wordColAddr + wordRowAddr, temp);
+                let wordColAddr = wordColAddr + 32;
+
                 let y = y + 1;
             }
-            let x = x + 1;
         }
 
+        return;
+    }
+
+    function void break() {
         return;
     }
 
