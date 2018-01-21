@@ -39,7 +39,7 @@ class Sys {
         var int ms;
         var int i;
 
-        let oneMs = 75;
+        let oneMs = 450;
         let ms = 0;
         while (ms < duration) {
             let i = 0;

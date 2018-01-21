@@ -26,7 +26,7 @@ label WHILE_END0
 push constant 0
 return
 function Sys.wait 3
-push constant 75
+push constant 500
 pop local 0
 push constant 0
 pop local 1
