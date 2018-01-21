@@ -50,6 +50,9 @@ class Keyboard {
         // print a pipe as the "cursor"
         do Output.printChar(124);
         while (~key) {
+            // check if a key is pressed 
+            let key = Keyboard.keyPressed();
+            // blink (can't just use wait because we need to read keyboard)
             let blinkCounter = blinkCounter + 1;
             if (blinkCounter = 20000) {
                 do Output.backSpace();
@@ -60,7 +63,6 @@ class Keyboard {
                 do Output.printChar(124);
                 let blinkCounter = 0;
             }
-            let key = Keyboard.keyPressed();
         }
         while (~(Keyboard.keyPressed() = 0)) {
         }
