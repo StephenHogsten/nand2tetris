@@ -326,8 +326,6 @@ gt
 not
 not
 if-goto WHILE_END0
-call Screen.break 0
-pop temp 0
 push local 0
 push constant 16
 call Math.divide 2
@@ -427,9 +425,6 @@ goto WHILE_EXP1
 label WHILE_END1
 goto WHILE_EXP0
 label WHILE_END0
-push constant 0
-return
-function Screen.break 0
 push constant 0
 return
 function Screen.drawCircle 3

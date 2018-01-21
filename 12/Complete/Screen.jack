@@ -173,7 +173,6 @@ class Screen {
         let x = x1;
         while (~(x > x2)) {
             // calculate which word address for each row, and exactly what to add
-            do Screen.break();
             let wordRowAddr = x / 16;   // which word in this row do we care about (0-31)
             let word = x - (wordRowAddr * 16);      // this is just which bit
             let x = x - word + 16;                  // incrementing x based on the word 
@@ -209,10 +208,6 @@ class Screen {
             }
         }
 
-        return;
-    }
-
-    function void break() {
         return;
     }
 
