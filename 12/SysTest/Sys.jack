@@ -56,7 +56,7 @@ class Sys {
     function void error(int errorCode) {
         var String s;
 
-        let s = String.new(1);
+        let s = String.new(5);
         do s.setInt(errorCode);
         do Output.moveCursor(0, 0);
         do Output.printString("ERR");

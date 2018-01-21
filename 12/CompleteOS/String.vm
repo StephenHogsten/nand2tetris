@@ -184,9 +184,9 @@ push local 3
 push constant 9
 gt
 push local 3
-or
 push constant 0
 lt
+or
 if-goto IF_TRUE1
 goto IF_FALSE1
 label IF_TRUE1

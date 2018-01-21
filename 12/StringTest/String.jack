@@ -85,7 +85,7 @@ class String {
 
         while (i < stringLength) {
             let digit = stringArray[i] - 48;
-            if (digit > 9 | digit < 0) {
+            if ((digit > 9) | (digit < 0)) {
                 let i = stringLength;
             } else {
                 let val = 10 * val  + digit;

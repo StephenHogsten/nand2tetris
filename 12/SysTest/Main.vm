@@ -25,7 +25,7 @@ call Output.printString 1
 pop temp 0
 call Output.println 0
 pop temp 0
-push constant 65
+push constant 64
 call String.new 1
 push constant 80
 call String.appendChar 2
@@ -69,9 +69,7 @@ push constant 114
 call String.appendChar 2
 push constant 32
 call String.appendChar 2
-push constant 49
-call String.appendChar 2
-push constant 48
+push constant 50
 call String.appendChar 2
 push constant 32
 call String.appendChar 2
@@ -180,7 +178,7 @@ call Keyboard.keyPressed 0
 pop local 0
 goto WHILE_EXP1
 label WHILE_END1
-push constant 10000
+push constant 2000
 call Sys.wait 1
 pop temp 0
 call Output.println 0

@@ -62,11 +62,6 @@ class Main {
         do Output.printString("intValue: ");
         do Output.printInt(s.intValue());        // intValue: -32123
         do Output.println();
-
-        let s = "-3212ss3";
-        do Output.printString("intValue: ");
-        do Output.printInt(s.intValue());        // intValue: -3212
-        do Output.println();
         
         do Output.printString("backSpace: ");
         do Output.printInt(String.backSpace());  // backSpace: 129
