@@ -159,9 +159,9 @@ class Screen {
         // (e.g. set to -1 instead of setting each bit in a loop)
 
         let x = x1;
-        while (x < x2) {
+        while (~(x > x2)) {
             let y = y1;
-            while (y < y2) {
+            while (~(y > y2)) {
                 do Screen.drawPixel(x, y);
                 let y = y + 1;
             }
