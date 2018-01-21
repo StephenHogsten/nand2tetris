@@ -58,6 +58,7 @@ class Sys {
 
         let s = String.new(1);
         do s.setInt(errorCode);
+        do Output.moveCursor(0, 0);
         do Output.printString("ERR");
         do Output.printString(s);
 

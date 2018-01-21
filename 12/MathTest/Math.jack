@@ -48,7 +48,6 @@ class Math {
         var int shiftedX;
         var int n;      // most significant big of x
         var int i;      // bit placehoder for x
-        var Array Y;    // bit representation for Y
         var boolean flip;   // whether we'll need to flip the sign of the abs 
 
         if (x < 0) {
@@ -62,21 +61,18 @@ class Math {
             let y = 0 - y;
         }
 
-        let Y = Math.int2bitwise(y);
         let sum = 0;
         let i = 0;
         let shiftedX = x;
 
-        // for each bit of y, add the apporpriately shifted value of x to the sum
+        // for each bit of y, add the appropriately shifted value of x to the sum
         while (i < 15) {
-            if (Y[i] = 1) {
+            if ((twoToThe[i] & y) > 0) {
                 let sum = sum + shiftedX;
             }
             let i = i + 1;                          //increment the bit
             let shiftedX = shiftedX + shiftedX;     //left-shift the total
         }        
-
-        do Memory.deAlloc(Y);
 
         // flip through addition
         if (flip) {
@@ -84,29 +80,6 @@ class Math {
         } else {
             return sum;
         }
-    }
-
-    function Array int2bitwise(int x) {
-        var int i;      // bit placeholder
-        var Array X;      // Array
-        var int twoTest;
-        
-        let twoTest = twoToThe;
-        let X = Array.new(16);
-        let i = 14;
-        while (i > -1) {
-            if (twoToThe[i] > x) {
-                // this power of two is too big - this bit should be false
-                let X[i] = 0;
-            } else {
-                // this bit should be true
-                let X[i] = 1;
-                // shrink x
-                let x = x - twoToThe[i];
-            }
-            let i = i - 1;
-        }
-        return X;
     }
 
     /** Returns the integer part of x/y.

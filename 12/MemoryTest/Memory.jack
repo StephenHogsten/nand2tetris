@@ -68,9 +68,9 @@ class Memory {
                     let freeListLength = freeListLength - 1;
                 }
 
-                if (~ lastList = 0) {
+                if (~ (lastList = 0)) {
                     // if this isn't the first list, point the previous list to the new one
-                    do Memory.poke(lastList +1, nextList);
+                    do Memory.poke(lastList + 1, nextList);
                 } else {
                     // if this is the first list, point the freeList field to the new one
                     let freeList = nextList;   
@@ -86,7 +86,9 @@ class Memory {
                 let blocksLeft = blocksLeft - 1;
             }
         }
-        return 0;   // theoretically this should never happen - we couldn't allocate space
+        // theoretically this should never happen - we couldn't allocate space
+        do Sys.error(6);
+        return 0;   
     }
 
     /** De-allocates the given object (cast as an array) by making

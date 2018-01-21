@@ -66,6 +66,10 @@ push local 0
 push argument 0
 call String.setInt 2
 pop temp 0
+push constant 0
+push constant 0
+call Output.moveCursor 2
+pop temp 0
 push constant 3
 call String.new 1
 push constant 69
