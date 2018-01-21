@@ -256,6 +256,11 @@ class Output {
     function void backSpace() {
         if (column > 0) {
             let column = column - 1;
+        } else {
+            let column = 63;
+            if (row > 0) {
+                let row = row - 1;
+            }
         }
         return;
     }
