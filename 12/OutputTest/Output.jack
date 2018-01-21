@@ -50,6 +50,7 @@ class Output {
     
         // *SSH this is an array (127 is the highest ascii we respect) where each entry
         //      is a bitmap at the index of its ascii
+        // Also - note that each bitmap is in reverse, because the screen mapping goes LSB on the left to MSB on the right
         let charMaps = Array.new(127);
         
         // Black square, used for displaying non-printable characters.
@@ -267,37 +268,37 @@ class Output {
 
     // helpers
     function void drawChar(char c) {
-        var int x;
-        var int y;
-        var int cursorRow;
-        var int cursorColumn;
-        var int bitMap;
-        var int bitRow;
+        var int x;          //0
+        var int y;          //1
+        var Array bitMap;   //2
+        var int bitRow;     //3
+        var int clear;      //4
+        var int shift;      //5
+        var int wordAddr;   //6
+        var int word;       //7
 
-        let y = row * 11;
-        let x = column * 8;
-        let bitMap = charMaps[c];
-        let cursorRow = 0;
+        let x = column / 2;
+        if (column - x - x > 0) {
+            // this is an odd column - it goes on the right - we need to clear the 8 MSBs
+            let clear = 255;    // 0000000011111111
+            let shift = 256;
+        } else {
+            // this is an even column - it goes on the left, we need to clear the 8 LSBs
+            let clear = -128;  // 1111111100000000 (remember that this is negative so we have to get two's complement)
+            let shift = 1;
+        }
+
+        let wordAddr = 16384 + (row * 352) + x;   // (*11 for the grid row, then * 32 for the screen row, we don't need adjustments for the column word)
+        let bitMap = Output.getMap(c);
+        let y = 0;
         
-        while (cursorRow < 11) {
-            let cursorColumn = 0;
-            let bitRow = bitMap[cursorRow];
-            while (cursorColumn < 8) {
-                // set color for this bit
-                if (bitRow & masks[cursorColumn] = masks[cursorColumn]) {
-                    do Screen.setColor(true);
-                } else {
-                    do Screen.setColor(false);
-                }
+        while (y < 11) {
+            let bitRow = bitMap[y];
+            let word = Memory.peek(wordAddr) & clear + (bitRow * shift);
+            do Memory.poke(wordAddr, word);
+            let wordAddr = wordAddr + 32;
 
-                // draw this pixel
-                do Screen.drawPixel(x + cursorColumn, y + cursorRow);
-
-                // increment column
-                let cursorColumn = cursorColumn + 1;
-            }
-            // increment row
-            let cursorRow = cursorRow + 1;
+            let y = y + 1;
         }
         
         return;
